@@ -195,6 +195,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
       const SnackBar(content: Text('No file selected')),
     );
   }
+  
   Future  uploadImage () async 
   {
     if(_image == null) return "";
@@ -207,7 +208,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
     'Accept': 'application/json',}; 
     var  response = await http.put(Uri.parse("http://10.0.2.2:5000/api"),body: data,headers:requestHeaders );
    
-    print(response.body);
+    print("ssss");
      setState(() {
        body = response.body;
      });

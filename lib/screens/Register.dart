@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
@@ -149,18 +150,19 @@ class _Register extends State<Register> {
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Form(
             autovalidateMode: AutovalidateMode.always,
             key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              controller: ScrollController(keepScrollOffset: true),
+              scrollDirection: Axis.vertical,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 45.0),
+                  const SizedBox(height: 25.0),
                   nameField,
                   const SizedBox(height: 25.0),
                   mobileField,

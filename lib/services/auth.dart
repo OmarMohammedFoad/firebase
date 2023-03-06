@@ -67,24 +67,27 @@ class AuthService {
         UserCredential userCredential =
             await _auth.signInWithCredential(authCredential);
         User? user = userCredential.user;
+        // print(user);
         return _firebaseUser(user);
       }
     } catch (e) {
+      // print("ss");
+      // print(e);
       return FirebaseUser(code: e.toString(), uid: null);
     }
   }
 
-  Future registerEmailPassword(LoginUser _login, String fullName,
+  Future registerEmailPassword(LoginUser login, String fullName,
       String mobileNumber, String email, String age) async {
     try {
       //Create user
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-              email: _login.email.toString(),
-              password: _login.password.toString());
+              email: login.email.toString(),
+              password: login.password.toString());
 
       final User? userr = _auth.currentUser;
-      final _uid = userr?.uid;
+      final uid = userr?.uid;
       userr?.updatePhotoURL(imageUrl);
       userr?.reload();
 
@@ -175,7 +178,7 @@ class AuthService {
   Future updateUserData(String? uid, String fullName, String mobileNumber, String email, String age) async{
     collection.where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .limit(1)
-        .get()
+        .get() 
         .then((QuerySnapshot querySnapshot){
           if(querySnapshot.docs.isEmpty){
             collection.add({
