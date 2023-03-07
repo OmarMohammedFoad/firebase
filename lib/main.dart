@@ -1,4 +1,4 @@
-import 'package:firebase/screens/upload_screen.dart';
+import 'package:firebase/screens/home_page.dart';
 import 'package:firebase/screens/wrapper.dart';
 import 'package:firebase/services/auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           ),
         ),
-        home:  Wrapper(),
+        home: Wrapper(),
       ),);
 
   }

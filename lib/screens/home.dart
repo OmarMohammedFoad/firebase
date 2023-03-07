@@ -30,7 +30,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              title: const Text('Kidnopathy'),
+              title: Text('Kidnopathy'),
               pinned: true,
               floating: true,
               forceElevated: innerBoxIsScrolled,
@@ -49,8 +49,9 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
         body: TabBarView(
           controller: _tabController,
           children: <Widget>[
-            const UploadImageScreen(),
-            const HistoryScreen(),
+            //KidneyDiseaseDetection(),
+            UploadImageScreen(),
+            HistoryScreen(),
             ProfilePage(),
           ],
         ),

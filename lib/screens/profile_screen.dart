@@ -55,7 +55,7 @@ class ProfilePage extends StatelessWidget {
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     //Error Handling conditions
                     if (snapshot.hasError) {
-                      return const Text("Something went wrong");
+                      return Text("Something went wrong");
                     }
 
                     if (snapshot.hasData) {
@@ -65,9 +65,9 @@ class ProfilePage extends StatelessWidget {
                           itemBuilder: (context, i) {
                             var data = snapshot.data!.docs[i];
                             email = data['email'];
-                            name = data['fullName'];
+                            name = data['name'];
                             age = data['age'];
-                            phone = data['mobileNumber'];
+                            phone = data['number'];
 //                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
                             return Center(
                               child: Container(
@@ -75,26 +75,26 @@ class ProfilePage extends StatelessWidget {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    const SizedBox(
+                                    SizedBox(
                                       height: 20,
                                     ),
                                     Text(
                                       name!,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           fontSize: 22, fontWeight: FontWeight.bold),
                                     ),
-                                    const SizedBox(
+                                    SizedBox(
                                       height: 20,
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.all(10),
+                                      padding: EdgeInsets.all(10),
                                       child: Column(
                                         children: <Widget>[
                                           Container(
                                             padding: const EdgeInsets.only(
                                                 left: 8.0, bottom: 4.0),
                                             alignment: Alignment.topLeft,
-                                            child: const Text(
+                                            child: Text(
                                               "User Information",
                                               style: TextStyle(
                                                 color: Colors.black87,
