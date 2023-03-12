@@ -199,7 +199,8 @@ class AuthService {
     userModel.name = fullName;
     userModel.number = mobileNumber;
     userModel.age = age;
-    userModel.isAssigned = 'NA';
+    userModel.isAssigned = 'false';
+    userModel.assignedTo = 'NA';
 
     await firebaseFirestore
         .collection("users")
