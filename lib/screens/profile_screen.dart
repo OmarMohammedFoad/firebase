@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
 
+// ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
-  final currentUser = FirebaseAuth.instance;
   final AuthService _auth = AuthService();
+  final user = FirebaseAuth.instance.currentUser!;
+
 
   String? email = '';
   String? name = '';
@@ -14,32 +16,12 @@ class ProfilePage extends StatelessWidget {
   String? phone = '';
   String? isSelected='';
 
+  ProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final SignOut = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Theme
-          .of(context)
-          .primaryColor,
-      child: MaterialButton(
-        minWidth: MediaQuery
-            .of(context)
-            .size
-            .width,
-        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () async {
-          await _auth.signOut();
-        },
-        child: Text(
-          "Logout",
-          style: TextStyle(color: Theme
-              .of(context)
-              .primaryColorLight),
-          textAlign: TextAlign.center,
-        ),
-      ),
-    );
+
+    
 
 
     return Scaffold(
@@ -51,7 +33,7 @@ class ProfilePage extends StatelessWidget {
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
-                      .where("uid", isEqualTo: currentUser.currentUser!.uid)
+                      .where("uid", isEqualTo: user.uid)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     //Error Handling conditions
@@ -60,11 +42,14 @@ class ProfilePage extends StatelessWidget {
                     }
 
                     if (snapshot.hasData) {
+                      
+                     
                       return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
+                          itemCount: snapshot.data!.docs.length  ,
                           shrinkWrap: true,
                           itemBuilder: (context, i) {
                             var data = snapshot.data!.docs[i];
+                            
                             email = data['email'];
                             name = data['fullname'];
                             age = data['age'];
@@ -108,7 +93,7 @@ class ProfilePage extends StatelessWidget {
                                           Card(
                                             child: Container(
                                               alignment: Alignment.topLeft,
-                                              padding: EdgeInsets.all(15),
+                                              padding: const EdgeInsets.all(15),
                                               child: Column(
                                                 children: <Widget>[
                                                   Column(
@@ -118,22 +103,27 @@ class ProfilePage extends StatelessWidget {
                                                         tiles: [
                                                           ListTile(
                                                             leading:
-                                                            Icon(Icons.email),
-                                                            title: Text("Email"),
+                                                           const  Icon(Icons.email),
+                                                            title:const  Text("Email"),
                                                             subtitle: Text(
                                                                 email!),
                                                           ),
                                                           ListTile(
                                                             leading:
+<<<<<<< HEAD
                                                             Icon(Icons.person),
                                                             title: Text("doctor"),
+=======
+                                                           const  Icon(Icons.phone),
+                                                            title:const  Text("Phone"),
+>>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d
                                                             subtitle:
                                                             Text(isSelected!),
                                                           ),
                                                           ListTile(
                                                             leading:
-                                                            Icon(Icons.person),
-                                                            title: Text("Age"),
+                                                           const  Icon(Icons.person),
+                                                            title: const Text("Age"),
                                                             subtitle:
                                                             Text(age!),
                                                           ),
@@ -153,14 +143,52 @@ class ProfilePage extends StatelessWidget {
                               ),
                             );
                           });
-                    }
-
-                    return CircularProgressIndicator();
-                  }),
-              SizedBox(
+         }
+            return   const  CircularProgressIndicator();
+  }),
+            const  SizedBox(
                 height: 20,
               ),
-              Center(child: SignOut),
+              Center( child:
+              user.displayName != null? 
+             Column
+          (
+          mainAxisAlignment: MainAxisAlignment.center ,
+          children: [
+            CircleAvatar(
+              radius:50 ,
+              backgroundImage: NetworkImage(
+                
+               user.photoURL!
+              ),
+            ),
+            const SizedBox(height: 10,),
+            Text("Name : ${user.displayName!}" ),
+           const SizedBox(height: 10,),
+            // I Can not display the Email =>>>
+            Text("Email : ${user.email}"),
+            
+          ],
+        ) : const Text("")
+             ,
+             
+             ),
+            const SizedBox(height: 22,),
+              Center(child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(22)),
+                child: MaterialButton(onPressed: () async {
+                        
+                        await _auth.signOut();
+                      }, child:Text(
+                        "Logout",
+                        style: TextStyle(color: Theme
+                .of(context)
+                .primaryColorLight),
+                        textAlign: TextAlign.center,
+                      ), ),
+              )),
+              
             ],
           ),
         ),
