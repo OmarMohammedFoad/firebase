@@ -211,7 +211,6 @@ final droplist =  Container(
         title: const Text('Registration Demo Page'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-<<<<<<< HEAD
       body: ListView(
         children: [Form(
           autovalidateMode: AutovalidateMode.always,
@@ -249,38 +248,6 @@ final droplist =  Container(
                 const SizedBox(height: 15.0),
                      
               ],
-=======
-      body: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            autovalidateMode: AutovalidateMode.always,
-            key: _formKey,
-            child: SingleChildScrollView(
-              controller: ScrollController(keepScrollOffset: true),
-              scrollDirection: Axis.vertical,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 25.0),
-                  nameField,
-                  const SizedBox(height: 25.0),
-                  mobileField,
-                  const SizedBox(height: 25.0),
-                  ageField,
-                  const SizedBox(height: 25.0),
-                  emailField,
-                  const SizedBox(height: 25.0),
-                  passwordField,
-                  const SizedBox(height: 25.0),
-                  txtbutton,
-                  const SizedBox(height: 35.0),
-                  registerButton,
-                  const SizedBox(height: 15.0),
-                ],
-              ),
->>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d
             ),
           ),
         ),

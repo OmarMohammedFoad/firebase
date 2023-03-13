@@ -198,27 +198,4 @@ class _UploadImageScreen extends State<UploadImageScreen> {
       const SnackBar(content: Text('No file selected')),
     );
   }
-<<<<<<< HEAD
 }
-=======
-  
-  Future  uploadImage () async 
-  {
-    if(_image == null) return "";
-
-    String base64 =  base64Encode(_image!.readAsBytesSync());
-    String imagename = _image!.path.split("/").last;
-    String data = base64;
-    
-    Map<String, String> requestHeaders ={'Content-type': 'application/json',
-    'Accept': 'application/json',}; 
-    var  response = await http.put(Uri.parse("http://10.0.2.2:5000/api"),body: data,headers:requestHeaders );
-   
-    print("ssss");
-     setState(() {
-       body = response.body;
-     });
-    }
-}
-
->>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d

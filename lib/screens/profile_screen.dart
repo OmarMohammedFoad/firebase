@@ -110,13 +110,8 @@ class ProfilePage extends StatelessWidget {
                                                           ),
                                                           ListTile(
                                                             leading:
-<<<<<<< HEAD
                                                             Icon(Icons.person),
                                                             title: Text("doctor"),
-=======
-                                                           const  Icon(Icons.phone),
-                                                            title:const  Text("Phone"),
->>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d
                                                             subtitle:
                                                             Text(isSelected!),
                                                           ),

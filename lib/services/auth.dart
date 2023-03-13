@@ -78,18 +78,12 @@ class AuthService {
     }
   }
 
-<<<<<<< HEAD
   Future registerEmailPassword(LoginUser _login, String fullName,
       String mobileNumber, String email, String age,String selected_doctor) async {
-=======
-  Future registerEmailPassword(LoginUser login, String fullName,
-      String mobileNumber, String email, String age) async {
->>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d
     try {
       //Create user
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-<<<<<<< HEAD
           email: _login.email.toString(),
           password: _login.password.toString());
 
@@ -97,15 +91,6 @@ class AuthService {
       final _uid = userr?.uid;*/
       /*user?.updatePhotoURL(imageUrl);
       user?.reload();*/
-=======
-              email: login.email.toString(),
-              password: login.password.toString());
-
-      final User? userr = _auth.currentUser;
-      final uid = userr?.uid;
-      userr?.updatePhotoURL(imageUrl);
-      userr?.reload();
->>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d
 
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
@@ -206,7 +191,6 @@ class AuthService {
     return downloadURL;
   }
 
-<<<<<<< HEAD
   Future updateUserData(String fullName, String mobileNumber,
       String email, String age, String role,String selected_doctor) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -225,7 +209,6 @@ class AuthService {
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-=======
   Future updateUserData(String? uid, String fullName, String mobileNumber, String email, String age) async{
     collection.where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
         .limit(1)
@@ -243,6 +226,6 @@ class AuthService {
           }
     })
     .catchError((error){});
->>>>>>> 26725b4edf3c8555a3011e6c84ec8cb15364ea1d
   }
+}
 }
