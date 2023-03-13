@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/FirebaseUser.dart';
 import '../models/loginuser.dart';
-import '../models/model.dart';
+import '../models/usermode.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -76,7 +76,7 @@ class AuthService {
   }
 
   Future registerEmailPassword(LoginUser _login, String fullName,
-      String mobileNumber, String email, String age) async {
+      String mobileNumber, String email, String age,String selected_doctor) async {
     try {
       //Create user
       UserCredential userCredential = await FirebaseAuth.instance
@@ -91,7 +91,7 @@ class AuthService {
 
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
-      updateUserData(fullName, mobileNumber, email, age, 'Patient');
+      updateUserData(fullName, mobileNumber, email, age, 'Patient',selected_doctor );
 
       //Return user
       User? user = userCredential.user;
@@ -189,7 +189,7 @@ class AuthService {
   }
 
   Future updateUserData(String fullName, String mobileNumber,
-      String email, String age, String role) async {
+      String email, String age, String role,String selected_doctor) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
@@ -199,7 +199,8 @@ class AuthService {
     userModel.name = fullName;
     userModel.number = mobileNumber;
     userModel.age = age;
-    userModel.isAssigned = 'NA';
+    userModel.isAssigned = false;
+    userModel.isSelected= selected_doctor;
 
     await firebaseFirestore
         .collection("users")

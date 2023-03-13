@@ -12,6 +12,7 @@ class ProfilePage extends StatelessWidget {
   String? name = '';
   String? age = '';
   String? phone = '';
+  String? isSelected='';
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +66,9 @@ class ProfilePage extends StatelessWidget {
                           itemBuilder: (context, i) {
                             var data = snapshot.data!.docs[i];
                             email = data['email'];
-                            name = data['name'];
+                            name = data['fullname'];
                             age = data['age'];
-                            phone = data['number'];
+                            isSelected = data['isSelected'];
 //                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
                             return Center(
                               child: Container(
@@ -124,10 +125,10 @@ class ProfilePage extends StatelessWidget {
                                                           ),
                                                           ListTile(
                                                             leading:
-                                                            Icon(Icons.phone),
-                                                            title: Text("Phone"),
+                                                            Icon(Icons.person),
+                                                            title: Text("doctor"),
                                                             subtitle:
-                                                            Text(phone!),
+                                                            Text(isSelected!),
                                                           ),
                                                           ListTile(
                                                             leading:

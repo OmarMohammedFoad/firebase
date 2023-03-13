@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
+import "package:tflite/tflite.dart";
 
 class KidneyDiseaseDetection extends StatefulWidget {
   @override

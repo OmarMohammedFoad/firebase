@@ -24,6 +24,16 @@ class _Register extends State<Register> {
   final _age = TextEditingController();
   final _mobileNumber = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+      final List<String> _items = [
+    'doctor  1',
+    'doctor  2',
+    'doctor 3',
+    'doctor 4',
+    'doctor 5',
+  ];
+               
+  String? _selectedItem;
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,15 +124,21 @@ class _Register extends State<Register> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
+          
+          
           if (_formKey.currentState!.validate()) {
             dynamic result = await _auth.registerEmailPassword(
                 LoginUser(email: _email.text, password: _password.text),
                 _fullName.text.trim(),
                 _mobileNumber.text.trim(),
                 _email.text.trim(),
-                _age.text.trim()
+                _age.text.trim(),
+                _selectedItem.toString()
+                
             );
+            
             if (result.uid == null) {
+              
               //null means unsuccessfull authentication
               showDialog(
                   context: context,
@@ -142,45 +158,99 @@ class _Register extends State<Register> {
       ),
     );
 
+final droplist =  Container(
+  decoration: BoxDecoration(
+    border: Border.all(
+      color: Colors.grey.shade400,
+      width: 10.0,
+    ),
+    borderRadius: BorderRadius.circular(5.0),
+  ),
+  child:   DropdownButton<String>(
+  
+                value: _selectedItem,
+                icon: Icon(Icons.add_box),
+                iconDisabledColor:Colors.black ,
+                items: _items.map((value) {
+  
+          return DropdownMenuItem<String>(
+            value: value, 
+            child: Text(value),
+  
+          );
+  
+        }).toList(),
+  
+        onChanged: (String? selectedItem) {
+  
+          setState(() {
+            print(_selectedItem);
+             _selectedItem = selectedItem;
+  
+          });
+  
+        },
+  
+      ),
+);
+
+    final  text =  Text("choose the doctor",style:   TextStyle(
+      fontSize: 15.5 ,
+      color: Colors.black87,
+          fontWeight: FontWeight.bold,
+    
+    ),);
+
+                          
+  
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Registration Demo Page'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Form(
-            autovalidateMode: AutovalidateMode.always,
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 45.0),
-                  nameField,
-                  const SizedBox(height: 25.0),
-                  mobileField,
-                  const SizedBox(height: 25.0),
-                  ageField,
-                  const SizedBox(height: 25.0),
-                  emailField,
-                  const SizedBox(height: 25.0),
-                  passwordField,
-                  const SizedBox(height: 25.0),
-                  txtbutton,
-                  const SizedBox(height: 35.0),
-                  registerButton,
-                  const SizedBox(height: 15.0),
-                ],
-              ),
+      body: ListView(
+        children: [Form(
+          autovalidateMode: AutovalidateMode.always,
+          key: _formKey,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 45.0),
+                nameField,
+                const SizedBox(height: 25.0),
+                mobileField,
+                const SizedBox(height: 25.0),
+                ageField,
+                const SizedBox(height: 25.0),
+                emailField,
+                const SizedBox(height: 25.0),
+                passwordField,
+                 const SizedBox(height: 35.0),
+                 Center(
+                   child: Row(children: [
+                     text,
+                   const SizedBox(width: 35.0),
+                 
+                                droplist//  droplist,
+                   ],),
+                 ),
+                
+                const SizedBox(height: 25.0),
+                txtbutton,
+                const SizedBox(height: 35.0),
+                registerButton,
+                const SizedBox(height: 15.0),
+                     
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ]),
     );
   }
 }
