@@ -1,7 +1,6 @@
 import 'package:firebase/screens/upload_screen.dart';
 import 'package:firebase/screens/history_screen.dart';
 import 'package:firebase/screens/profile_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

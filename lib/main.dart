@@ -6,7 +6,7 @@ import 'package:firebase/screens/wrapper.dart';
 import 'package:firebase/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'models/FirebaseUser.dart';
+import 'package:firebase/models/firebaseuser.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +15,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
 
   // This widget is the root of your application.
   @override
@@ -44,3 +46,6 @@ class MyApp extends StatelessWidget {
 
   }
 }
+
+
+

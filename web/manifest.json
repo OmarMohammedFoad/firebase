@@ -1,6 +1,6 @@
 {
-    "name": "web",
-    "short_name": "web",
+    "name": "project",
+    "short_name": "project",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

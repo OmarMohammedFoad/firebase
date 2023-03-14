@@ -7,7 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../models/FirebaseUser.dart';
+import '../models/firebaseuser.dart';
 import '../models/loginuser.dart';
 import '../models/usermode.dart';
 
