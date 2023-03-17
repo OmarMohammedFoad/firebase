@@ -1,6 +1,5 @@
 import 'package:firebase/screens/home.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';

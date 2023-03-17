@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
@@ -168,7 +167,6 @@ final droplist =  Container(
     borderRadius: BorderRadius.circular(5.0),
   ),
   child:   DropdownButton<String>(
-  
                 value: _selectedItem,
                 icon: Icon(Icons.add_box),
                 iconDisabledColor:Colors.black ,
@@ -202,9 +200,6 @@ final droplist =  Container(
     
     ),);
 
-                          
-  
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -236,7 +231,6 @@ final droplist =  Container(
                    child: Row(children: [
                      text,
                    const SizedBox(width: 35.0),
-                 
                                 droplist//  droplist,
                    ],),
                  ),

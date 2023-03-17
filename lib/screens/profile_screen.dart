@@ -4,24 +4,41 @@ import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
 
-// ignore: must_be_immutable
 class ProfilePage extends StatelessWidget {
+  final currentUser = FirebaseAuth.instance;
   final AuthService _auth = AuthService();
-  final user = FirebaseAuth.instance.currentUser!;
-
 
   String? email = '';
   String? name = '';
   String? age = '';
   String? phone = '';
-  String? isSelected='';
-
-  ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    
+    final SignOut = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Theme
+          .of(context)
+          .primaryColor,
+      child: MaterialButton(
+        minWidth: MediaQuery
+            .of(context)
+            .size
+            .width,
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () async {
+          await _auth.signOut();
+        },
+        child: Text(
+          "Logout",
+          style: TextStyle(color: Theme
+              .of(context)
+              .primaryColorLight),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
 
 
     return Scaffold(
@@ -33,7 +50,7 @@ class ProfilePage extends StatelessWidget {
               StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('users')
-                      .where("uid", isEqualTo: user.uid)
+                      .where("uid", isEqualTo: currentUser.currentUser!.uid)
                       .snapshots(),
                   builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     //Error Handling conditions
@@ -42,18 +59,15 @@ class ProfilePage extends StatelessWidget {
                     }
 
                     if (snapshot.hasData) {
-                      
-                     
                       return ListView.builder(
-                          itemCount: snapshot.data!.docs.length  ,
+                          itemCount: snapshot.data!.docs.length,
                           shrinkWrap: true,
                           itemBuilder: (context, i) {
                             var data = snapshot.data!.docs[i];
-                            
                             email = data['email'];
-                            name = data['fullname'];
+                            name = data['name'];
                             age = data['age'];
-                            isSelected = data['isSelected'];
+                            phone = data['number'];
 //                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
                             return Center(
                               child: Container(
@@ -93,7 +107,7 @@ class ProfilePage extends StatelessWidget {
                                           Card(
                                             child: Container(
                                               alignment: Alignment.topLeft,
-                                              padding: const EdgeInsets.all(15),
+                                              padding: EdgeInsets.all(15),
                                               child: Column(
                                                 children: <Widget>[
                                                   Column(
@@ -103,22 +117,22 @@ class ProfilePage extends StatelessWidget {
                                                         tiles: [
                                                           ListTile(
                                                             leading:
-                                                           const  Icon(Icons.email),
-                                                            title:const  Text("Email"),
+                                                            Icon(Icons.email),
+                                                            title: Text("Email"),
                                                             subtitle: Text(
                                                                 email!),
                                                           ),
                                                           ListTile(
                                                             leading:
-                                                            Icon(Icons.person),
-                                                            title: Text("doctor"),
+                                                            Icon(Icons.phone),
+                                                            title: Text("Phone"),
                                                             subtitle:
-                                                            Text(isSelected!),
+                                                            Text(phone!),
                                                           ),
                                                           ListTile(
                                                             leading:
-                                                           const  Icon(Icons.person),
-                                                            title: const Text("Age"),
+                                                            Icon(Icons.person),
+                                                            title: Text("Age"),
                                                             subtitle:
                                                             Text(age!),
                                                           ),
@@ -138,52 +152,14 @@ class ProfilePage extends StatelessWidget {
                               ),
                             );
                           });
-         }
-            return   const  CircularProgressIndicator();
-  }),
-            const  SizedBox(
+                    }
+
+                    return CircularProgressIndicator();
+                  }),
+              SizedBox(
                 height: 20,
               ),
-              Center( child:
-              user.displayName != null? 
-             Column
-          (
-          mainAxisAlignment: MainAxisAlignment.center ,
-          children: [
-            CircleAvatar(
-              radius:50 ,
-              backgroundImage: NetworkImage(
-                
-               user.photoURL!
-              ),
-            ),
-            const SizedBox(height: 10,),
-            Text("Name : ${user.displayName!}" ),
-           const SizedBox(height: 10,),
-            // I Can not display the Email =>>>
-            Text("Email : ${user.email}"),
-            
-          ],
-        ) : const Text("")
-             ,
-             
-             ),
-            const SizedBox(height: 22,),
-              Center(child: Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.black,borderRadius: BorderRadius.circular(22)),
-                child: MaterialButton(onPressed: () async {
-                        
-                        await _auth.signOut();
-                      }, child:Text(
-                        "Logout",
-                        style: TextStyle(color: Theme
-                .of(context)
-                .primaryColorLight),
-                        textAlign: TextAlign.center,
-                      ), ),
-              )),
-              
+              Center(child: SignOut),
             ],
           ),
         ),

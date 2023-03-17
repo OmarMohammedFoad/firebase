@@ -9,7 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import '../models/firebaseuser.dart';
 import '../models/loginuser.dart';
-import '../models/usermode.dart';
+import '../models/usermodel.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -78,14 +78,19 @@ class AuthService {
     }
   }
 
-  Future registerEmailPassword(LoginUser _login, String fullName,
-      String mobileNumber, String email, String age,String selected_doctor) async {
+  Future registerEmailPassword(
+      LoginUser _login,
+      String fullName,
+      String mobileNumber,
+      String email,
+      String age,
+      String selectedDoctor) async {
     try {
       //Create user
       UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
-          email: _login.email.toString(),
-          password: _login.password.toString());
+              email: _login.email.toString(),
+              password: _login.password.toString());
 
       /*final User? userr = _auth.currentUser;
       final _uid = userr?.uid;*/
@@ -94,7 +99,8 @@ class AuthService {
 
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
-      updateUserData(fullName, mobileNumber, email, age, 'Patient',selected_doctor );
+      updateUserData(
+          fullName, mobileNumber, email, age, 'Patient', selectedDoctor);
 
       //Return user
       User? user = userCredential.user;
@@ -120,8 +126,24 @@ class AuthService {
     await _googleSignIn.signOut();
   }
 
-  getImage(String imageName){
+  getImage(String imageName) {
     refStorage.child(_auth.currentUser!.uid).child(imageName);
+  }
+
+  final Stream<QuerySnapshot> _historyStream = FirebaseFirestore.instance
+      .collection('history')
+      .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
+
+  getImages() async {
+    var collection = FirebaseFirestore.instance.collection('history');
+    var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var values = data?['images'];
+      print(values);
+      return values;
+    }
   }
 
   Future<void> uploadFile(String filePath, String fileName) async {
@@ -130,19 +152,22 @@ class AuthService {
     Reference referenceDirImage = referenceRoot.child(_auth.currentUser!.uid);
     Reference referenceImageToUpload = referenceDirImage.child(fileName);
     try {
-      //await storage.ref('test/$fileName').putFile(file);
       await referenceImageToUpload.putFile(file);
       imageUrl = await referenceImageToUpload.getDownloadURL();
-      final Reference storage =
-      FirebaseStorage.instance.ref().child("${_auth.currentUser!.uid}.jpg");
+      final Reference storage = FirebaseStorage.instance.ref().child("${_auth.currentUser!.uid}.jpg");
       final UploadTask task = storage.putFile(file);
       task.then((value) async {
         String url = (await storage.getDownloadURL()).toString();
-        FirebaseFirestore.instance.collection("history").add({
+        var image = [url];
+        var diagnosis = ['Tumor'];
+        FirebaseFirestore.instance
+            .collection("history")
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .update({
           'id': _auth.currentUser!.uid,
           'email': _auth.currentUser!.email,
-          'image': url,
-          'diagnosis': 'Tumor',
+          'images': FieldValue.arrayUnion(image),
+          'diagnosis': FieldValue.arrayUnion(diagnosis),
           'time': DateTime.now(),
         });
       });
@@ -191,8 +216,8 @@ class AuthService {
     return downloadURL;
   }
 
-  Future updateUserData(String fullName, String mobileNumber,
-      String email, String age, String role,String selected_doctor) async {
+  Future updateUserData(String fullName, String mobileNumber, String email,
+      String age, String role, String selectedDoctor) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
@@ -203,29 +228,30 @@ class AuthService {
     userModel.number = mobileNumber;
     userModel.age = age;
     userModel.isAssigned = false;
-    userModel.isSelected= selected_doctor;
+    userModel.assignedTo = "9mfhaxtlLOXSiNKXnJUXfbUDMdz1";
 
     await firebaseFirestore
         .collection("users")
         .doc(user.uid)
         .set(userModel.toMap());
-  Future updateUserData(String? uid, String fullName, String mobileNumber, String email, String age) async{
-    collection.where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-        .limit(1)
-        .get() 
-        .then((QuerySnapshot querySnapshot){
-          if(querySnapshot.docs.isEmpty){
-            collection.add({
-              'uid': uid,
-              'fullName': fullName,
-              'mobileNumber': mobileNumber,
-              'email': email,
-              'age': age,
-            }
-            );
-          }
-    })
-    .catchError((error){});
+
+    Future updateUserData(String? uid, String fullName, String mobileNumber,
+        String email, String age) async {
+      collection
+          .where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+          .limit(1)
+          .get()
+          .then((QuerySnapshot querySnapshot) {
+        if (querySnapshot.docs.isEmpty) {
+          collection.add({
+            'uid': uid,
+            'fullName': fullName,
+            'mobileNumber': mobileNumber,
+            'email': email,
+            'age': age,
+          });
+        }
+      }).catchError((error) {});
+    }
   }
-}
 }
