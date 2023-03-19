@@ -1,4 +1,6 @@
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 import '../services/auth.dart';
@@ -14,6 +16,15 @@ class HistoryScreen extends StatefulWidget {
 
 class _HistoryScreen extends State<HistoryScreen> {
   final AuthService _auth = new AuthService();
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _pageController = PageController(viewportFraction: 0.8);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,8 +33,56 @@ class _HistoryScreen extends State<HistoryScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              future: FirebaseFirestore.instance.collection('history').doc(userId).get(),
+              builder: (_, snapshot) {
+                if (snapshot.hasError) return Text ('Error = ${snapshot.error}');
+
+                if (snapshot.hasData) {
+                  var data = snapshot.data!.data();
+                  var images = data!['images']; // <-- Your value
+                  print('images $images');
+                  //return Text('Value = $value');
+                  return CarouselSlider.builder(
+                    itemCount: images.length,
+                    options: CarouselOptions(
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      viewportFraction: 0.9,
+                      aspectRatio: 1.0,
+                      initialPage: 0,
+                    ),
+                    itemBuilder: (BuildContext context, int index, int realIndex) {
+                      return Container(
+                        child: Image.network(images[index]),
+                        width: double.infinity,
+                      );
+                  },
+
+                  /*
+                    child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: images.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Image.network(images[index]),
+                            //child: Text(snapshot.data!.items[index].name),
+                          );
+                        }),
+*/
+                  );
+                }
+
+                return Center(child: CircularProgressIndicator());
+              },
+            )
+
+/*
             FutureBuilder(
-                future: _auth.listFiles(),
+                future: FirebaseFirestore.instance.collection('history')
+                .get(),
                 builder: (BuildContext context,
                     AsyncSnapshot<firebase_storage.ListResult> snapshot) {
                   if (snapshot.connectionState == ConnectionState.done &&
@@ -34,12 +93,12 @@ class _HistoryScreen extends State<HistoryScreen> {
                       child: ListView.builder(
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: snapshot.data!.items.length,
+                          itemCount: 2,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
-                              //child: Image.network(snapshot.data!.items[index].name
-                              child: Text(snapshot.data!.items[index].name),
+                              child: Image.network(snapshot.data!.items[index].name),
+                              //child: Text(snapshot.data!.items[index].name),
                             );
                           }),
                     );
@@ -50,6 +109,9 @@ class _HistoryScreen extends State<HistoryScreen> {
                   }
                   return Container();
                 }),
+*/
+
+/*
             FutureBuilder(
                 future: _auth.downloadURL('image_picker3015579039885344615.jpg'),
                 builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -70,6 +132,7 @@ class _HistoryScreen extends State<HistoryScreen> {
                   }
                   return Container();
                 }),
+*/
           ],
         ),
       ),

@@ -1,12 +1,16 @@
-import 'package:firebase/screens/history_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/screens/historyList.dart';
 import 'package:firebase/screens/profile_screen.dart';
 import 'package:firebase/screens/upload_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
-import 'historyList.dart';
+import 'history_screen.dart';
 
-class Home extends StatefulWidget{
+
+class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _Home();
@@ -19,7 +23,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -30,14 +34,37 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
           return <Widget>[
             SliverAppBar(
               title: Text('Kidnopathy'),
+              actions: [
+                PopupMenuButton(
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem<int>(
+                        value: 0,
+                        child: Text("My History"),
+                      ),
+                    ];
+                  },
+                  onSelected: (value) {
+                    if (value == 0) {
+                      //print("My account menu is selected.");
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => HistoryListScreen())
+                      );
+                    }
+                  },
+                )
+              ],
               pinned: true,
               floating: true,
               forceElevated: innerBoxIsScrolled,
               backgroundColor: Theme.of(context).primaryColor,
               bottom: TabBar(
                 tabs: <Tab>[
-                  Tab(text: 'Home', icon: FaIcon(FontAwesomeIcons.home),),
-                  Tab(text: 'History', icon: FaIcon(FontAwesomeIcons.history)),
+                  Tab(
+                    text: 'Home',
+                    icon: FaIcon(FontAwesomeIcons.home),
+                  ),
+                  //Tab(text: 'History', icon: FaIcon(FontAwesomeIcons.history)),
                   Tab(text: 'Profile', icon: FaIcon(FontAwesomeIcons.user)),
                 ],
                 controller: _tabController,
@@ -51,41 +78,11 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
             //KidneyDiseaseDetection(),
             UploadImageScreen(),
             //HistoryScreen(),
-            HistoryListScreen(),
+            //HistoryListScreen(),
             ProfilePage(),
           ],
         ),
       ),
     );
-
-
-    /*return SafeArea(
-        top: false,
-        bottom: false,
-        child: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text('Demo Application'),
-              backgroundColor: Theme.of(context).primaryColor,
-              bottom: TabBar(
-                tabs: [
-                  Tab(text: 'Home', icon: FaIcon(FontAwesomeIcons.home),),
-                  Tab(text: 'History', icon: FaIcon(FontAwesomeIcons.history)),
-                  Tab(text: 'Profile', icon: FaIcon(FontAwesomeIcons.user)),
-                ],
-              ),
-            ),
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                UploadImageScreen(),
-                HistoryScreen(),
-                ProfilePage(),
-              ],
-            ),
-          ),
-    )
-    );*/
   }
 }

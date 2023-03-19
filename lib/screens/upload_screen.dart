@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
@@ -20,6 +21,9 @@ class _UploadImageScreen extends State<UploadImageScreen> {
   late File _image;
   late List _results;
   bool imageSelect = false;
+  String? email;
+  String? name;
+  bool uploaded = false;
 
   @override
   void initState() {
@@ -27,6 +31,8 @@ class _UploadImageScreen extends State<UploadImageScreen> {
     loadModel().then((value) {
       setState(() {});
     });
+    email = FirebaseAuth.instance.currentUser!.email;
+    name = FirebaseAuth.instance.currentUser!.displayName;
   }
 
   @override
@@ -65,49 +71,48 @@ class _UploadImageScreen extends State<UploadImageScreen> {
     return Scaffold(
       body: Center(
           child: SingleChildScrollView(
-            child: Container(
-                margin: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+        child: Container(
+            margin: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                (!imageSelect)
+                    ? Container(
+                        width: 300,
+                        height: 300,
+                        color: Colors.grey[300]!,
+                      )
+                    : Image.file(_image),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    //if (imageSelect) const CircularProgressIndicator(),
-                    (!imageSelect)
-                        ? Container(
-                      width: 300,
-                      height: 300,
-                      color: Colors.grey[300]!,
-                    )
-                        : Image.file(_image),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.white,
-                                onPrimary: Colors.grey,
-                                shadowColor: Colors.grey[400],
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0)),
-                              ),
-                              onPressed: () {
-                                pickImage(ImageSource.gallery);
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 5),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(
-                                      Icons.image,
-                                      size: 30,
-                                      color: Colors.black,
-                                    ),
-                                    Text(
+                    Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.grey,
+                            shadowColor: Colors.grey[400],
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                          onPressed: () {
+                            pickImage(ImageSource.gallery);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(
+                                  Icons.image,
+                                  size: 30,
+                                  color: Colors.black,
+                                ),
+                                Text(
                                       "Gallery",
                                       style: TextStyle(
                                           fontSize: 13,
@@ -154,43 +159,6 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                                 ),
                               ),
                             )),
-                        Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                primary: Colors.white,
-                                onPrimary: Colors.grey,
-                                shadowColor: Colors.grey[400],
-                                elevation: 10,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0)),
-                              ),
-                              onPressed: () {
-                                _auth.getImages();
-                              },
-                              child: Container(
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 5, horizontal: 5),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: const [
-                                    Icon(
-                                      Icons.check_box_sharp,
-                                      size: 30,
-                                      color: Colors.black,
-                                    ),
-                                    Text(
-                                      "Test",
-                                      style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            )),
                       ],
                     ),
                     const SizedBox(
@@ -199,17 +167,22 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                     Column(
                       children: (imageSelect)
                           ? _results.map((result) {
-                        print('Results: $result');
-                        return Card(
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: Text(
-                              "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
-                              style: const TextStyle(
-                                  color: Colors.red, fontSize: 20),
+                          if (uploaded) {
+                            _auth.updateDiagnosis(result['label']);
+                            uploaded = false;
+                          } else
+                            Text('Image not uploaded');
+                          print('Results: $result');
+                          return Card(
+                            child: Container(
+                              margin: EdgeInsets.all(10),
+                              child: Text(
+                                "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
+                                style: const TextStyle(
+                                    color: Colors.red, fontSize: 20),
+                              ),
                             ),
-                          ),
-                        );
+                          );
                       }).toList()
                           : [],
                     ),
@@ -227,6 +200,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
       _auth
           .uploadFile(pickedFile.path, pickedFile.name)
           .then((value) => print('Done'));
+      uploaded = true;
       setState(() {});
       imageClassification(image);
       return;

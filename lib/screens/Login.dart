@@ -1,4 +1,5 @@
 import 'package:firebase/screens/home.dart';
+import 'package:firebase/screens/upload_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
@@ -122,8 +123,11 @@ class _Login extends State<Login> {
                   );
                 });
           }
-          Navigator.of(context).push(
+          /*Navigator.of(context).push(
               MaterialPageRoute(builder: (context)=>Home())
+          );*/
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context)=>UploadImageScreen())
           );
         },
         child: Text(
