@@ -167,7 +167,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                                     borderRadius: BorderRadius.circular(8.0)),
                               ),
                               onPressed: () {
-                                _auth.getImages();
+                                // _auth.getImages();
                               },
                               child: Container(
                                 margin: const EdgeInsets.symmetric(

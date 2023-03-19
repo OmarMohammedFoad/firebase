@@ -7,7 +7,6 @@ import 'package:firebase/services/auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:firebase/models/firebaseuser.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -15,7 +14,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
 
 
   // This widget is the root of your application.
@@ -41,7 +39,7 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           ),
         ),
-        home: Wrapper(),
+        home:const Wrapper(),
       ),);
 
   }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class Register extends StatefulWidget {
   final Function? toggleView;
@@ -10,12 +12,24 @@ class Register extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
+    
     return _Register();
+
   }
+
+  
 }
+
 
 class _Register extends State<Register> {
   final AuthService _auth = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDoctors();
+    print(_items);
+  }
 
   bool _obscureText = true;
   final _email = TextEditingController();
@@ -24,15 +38,27 @@ class _Register extends State<Register> {
   final _age = TextEditingController();
   final _mobileNumber = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-      final List<String> _items = [
-    'doctor  1',
-    'doctor  2',
-    'doctor 3',
-    'doctor 4',
-    'doctor 5',
-  ];
+ List<dynamic> _items = [];
+
                
   String? _selectedItem;
+  String? ss;
+
+
+   Future<void> _fetchDoctors() async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('role', isEqualTo: 'Doctor')
+        .get();
+    final List<dynamic> doctors = snapshot.docs.map((doc) =>{ 'id': doc.id,
+      'name': doc.data()['name'],}).toList();
+    setState(() {
+      _items = doctors;
+    });
+  }
+  
+
+
 
 
   @override
@@ -133,8 +159,8 @@ class _Register extends State<Register> {
                 _mobileNumber.text.trim(),
                 _email.text.trim(),
                 _age.text.trim(),
+                _selectedItem.toString(),
                 _selectedItem.toString()
-                
             );
             
             if (result.uid == null) {
@@ -173,14 +199,14 @@ final droplist =  Container(
                 items: _items.map((value) {
   
           return DropdownMenuItem<String>(
-            value: value, 
-            child: Text(value),
+            value: value["id"], 
+            child: Text(value["name"]),
   
           );
   
         }).toList(),
   
-        onChanged: (String? selectedItem) {
+        onChanged: (selectedItem) {
   
           setState(() {
             print(_selectedItem);
@@ -199,6 +225,7 @@ final droplist =  Container(
           fontWeight: FontWeight.bold,
     
     ),);
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

@@ -4,7 +4,6 @@ import 'package:firebase/screens/upload_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'historyList.dart';
 
 class Home extends StatefulWidget{
   @override
@@ -50,8 +49,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
           children: <Widget>[
             //KidneyDiseaseDetection(),
             UploadImageScreen(),
-            //HistoryScreen(),
-            HistoryListScreen(),
+            HistoryScreen(),
             ProfilePage(),
           ],
         ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,6 +14,7 @@ import '../models/usermodel.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final _googleSignIn = GoogleSignIn();
   final firebase_storage.FirebaseStorage storage =
       firebase_storage.FirebaseStorage.instance;
@@ -20,7 +22,7 @@ class AuthService {
   FirebaseFirestore.instance.collection('users');
   static Reference refStorage = FirebaseStorage.instance.ref();
 
-
+final currentUser = FirebaseAuth.instance;
   String imageUrl = '';
 
   FirebaseUser? _firebaseUser(User? user) {
@@ -54,6 +56,17 @@ class AuthService {
     }
   }
 
+Future getdocotr (List doctors) async
+{
+   final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      .collection('users')
+      .where('role', isEqualTo: "Patient")
+      .get();
+
+
+
+
+  ;}
   Future singInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
@@ -84,6 +97,7 @@ class AuthService {
       String mobileNumber,
       String email,
       String age,
+      String assignedTo,
       String selectedDoctor) async {
     try {
       //Create user
@@ -100,7 +114,7 @@ class AuthService {
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
       updateUserData(
-          fullName, mobileNumber, email, age, 'Patient', selectedDoctor);
+          fullName, mobileNumber, email, age, 'Patient', selectedDoctor,assignedTo);
 
       //Return user
       User? user = userCredential.user;
@@ -132,7 +146,7 @@ class AuthService {
 
   final Stream<QuerySnapshot> _historyStream = FirebaseFirestore.instance
       .collection('history')
-      .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .where("id", isEqualTo: FirebaseAuth.instance.currentUser)
       .snapshots();
 
   getImages() async {
@@ -177,6 +191,9 @@ class AuthService {
     }
   }
 
+
+   
+
   Future<void> uploadImageFromCamera(String filePath, String fileName) async {
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDirImage = referenceRoot.child(_auth.currentUser!.uid);
@@ -217,7 +234,7 @@ class AuthService {
   }
 
   Future updateUserData(String fullName, String mobileNumber, String email,
-      String age, String role, String selectedDoctor) async {
+      String age, String role, String selectedDoctor,String assignedTo) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
@@ -228,7 +245,7 @@ class AuthService {
     userModel.number = mobileNumber;
     userModel.age = age;
     userModel.isAssigned = false;
-    userModel.assignedTo = "9mfhaxtlLOXSiNKXnJUXfbUDMdz1";
+    userModel.assignedTo = assignedTo;
 
     await firebaseFirestore
         .collection("users")

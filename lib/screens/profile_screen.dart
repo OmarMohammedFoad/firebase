@@ -62,12 +62,14 @@ class ProfilePage extends StatelessWidget {
                       return ListView.builder(
                           itemCount: snapshot.data!.docs.length,
                           shrinkWrap: true,
+
                           itemBuilder: (context, i) {
                             var data = snapshot.data!.docs[i];
+                            print(data["email"]);
                             email = data['email'];
-                            name = data['name'];
-                            age = data['age'];
-                            phone = data['number'];
+                            // name = data['name'];
+                            // age = data['age'];
+                            // phone = data['number'];
 //                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
                             return Center(
                               child: Container(
