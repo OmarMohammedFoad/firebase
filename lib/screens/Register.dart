@@ -12,12 +12,12 @@ class Register extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    
+
     return _Register();
 
   }
 
-  
+
 }
 
 
@@ -38,14 +38,14 @@ class _Register extends State<Register> {
   final _age = TextEditingController();
   final _mobileNumber = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
- List<dynamic> _items = [];
+  List<dynamic> _items = [];
 
-               
+
   String? _selectedItem;
   String? ss;
 
 
-   Future<void> _fetchDoctors() async {
+  Future<void> _fetchDoctors() async {
     final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
         .collection('users')
         .where('role', isEqualTo: 'Doctor')
@@ -56,7 +56,7 @@ class _Register extends State<Register> {
       _items = doctors;
     });
   }
-  
+
 
 
 
@@ -70,7 +70,7 @@ class _Register extends State<Register> {
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Full Name",
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
     final ageField = TextFormField(
@@ -80,7 +80,7 @@ class _Register extends State<Register> {
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Age",
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
     final mobileField = TextFormField(
@@ -90,7 +90,7 @@ class _Register extends State<Register> {
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Mobile Number",
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
     final emailField = TextFormField(
@@ -108,7 +108,7 @@ class _Register extends State<Register> {
             contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
             hintText: "Email",
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final passwordField = TextFormField(
         obscureText: _obscureText,
@@ -126,7 +126,7 @@ class _Register extends State<Register> {
             hintText: "Password",
             suffixIcon: IconButton(
               icon:
-                  Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+              Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
               onPressed: () {
                 setState(() {
                   _obscureText = !_obscureText;
@@ -134,7 +134,7 @@ class _Register extends State<Register> {
               },
             ),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
+            OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
 
     final txtbutton = TextButton(
         onPressed: () {
@@ -150,8 +150,8 @@ class _Register extends State<Register> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          
-          
+
+
           if (_formKey.currentState!.validate()) {
             dynamic result = await _auth.registerEmailPassword(
                 LoginUser(email: _email.text, password: _password.text),
@@ -162,9 +162,9 @@ class _Register extends State<Register> {
                 _selectedItem.toString(),
                 _selectedItem.toString()
             );
-            
+
             if (result.uid == null) {
-              
+
               //null means unsuccessfull authentication
               showDialog(
                   context: context,
@@ -184,46 +184,46 @@ class _Register extends State<Register> {
       ),
     );
 
-final droplist =  Container(
-  decoration: BoxDecoration(
-    border: Border.all(
-      color: Colors.grey.shade400,
-      width: 10.0,
-    ),
-    borderRadius: BorderRadius.circular(5.0),
-  ),
-  child:   DropdownButton<String>(
-                value: _selectedItem,
-                icon: Icon(Icons.add_box),
-                iconDisabledColor:Colors.black ,
-                items: _items.map((value) {
-  
+    final droplist =  Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey.shade400,
+          width: 10.0,
+        ),
+        borderRadius: BorderRadius.circular(5.0),
+      ),
+      child:   DropdownButton<String>(
+        value: _selectedItem,
+        icon: Icon(Icons.add_box),
+        iconDisabledColor:Colors.black ,
+        items: _items.map((value) {
+
           return DropdownMenuItem<String>(
-            value: value["id"], 
+            value: value["id"],
             child: Text(value["name"]),
-  
+
           );
-  
+
         }).toList(),
-  
+
         onChanged: (selectedItem) {
-  
+
           setState(() {
             print(_selectedItem);
-             _selectedItem = selectedItem;
-  
+            _selectedItem = selectedItem;
+
           });
-  
+
         },
-  
+
       ),
-);
+    );
 
     final  text =  Text("choose the doctor",style:   TextStyle(
       fontSize: 15.5 ,
       color: Colors.black87,
-          fontWeight: FontWeight.bold,
-    
+      fontWeight: FontWeight.bold,
+
     ),);
 
 
@@ -234,45 +234,45 @@ final droplist =  Container(
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: ListView(
-        children: [Form(
-          autovalidateMode: AutovalidateMode.always,
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                const SizedBox(height: 45.0),
-                nameField,
-                const SizedBox(height: 25.0),
-                mobileField,
-                const SizedBox(height: 25.0),
-                ageField,
-                const SizedBox(height: 25.0),
-                emailField,
-                const SizedBox(height: 25.0),
-                passwordField,
-                 const SizedBox(height: 35.0),
-                 Center(
-                   child: Row(children: [
-                     text,
-                   const SizedBox(width: 35.0),
-                                droplist//  droplist,
-                   ],),
-                 ),
-                
-                const SizedBox(height: 25.0),
-                txtbutton,
-                const SizedBox(height: 35.0),
-                registerButton,
-                const SizedBox(height: 15.0),
-                     
-              ],
+          children: [Form(
+            autovalidateMode: AutovalidateMode.always,
+            key: _formKey,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  const SizedBox(height: 45.0),
+                  nameField,
+                  const SizedBox(height: 25.0),
+                  mobileField,
+                  const SizedBox(height: 25.0),
+                  ageField,
+                  const SizedBox(height: 25.0),
+                  emailField,
+                  const SizedBox(height: 25.0),
+                  passwordField,
+                  const SizedBox(height: 35.0),
+                  Center(
+                    child: Row(children: [
+                      text,
+                      const SizedBox(width: 35.0),
+                      droplist//  droplist,
+                    ],),
+                  ),
+
+                  const SizedBox(height: 25.0),
+                  txtbutton,
+                  const SizedBox(height: 35.0),
+                  registerButton,
+                  const SizedBox(height: 15.0),
+
+                ],
+              ),
             ),
           ),
-        ),
-      ]),
+          ]),
     );
   }
 }

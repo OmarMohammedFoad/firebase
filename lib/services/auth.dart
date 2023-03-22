@@ -45,8 +45,8 @@ class AuthService {
     try {
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-          email: _login.email.toString(),
-          password: _login.password.toString());
+              email: _login.email.toString(),
+              password: _login.password.toString());
       User? user = userCredential.user;
       return _firebaseUser(user);
     } on FirebaseAuthException catch (e) {
@@ -54,19 +54,27 @@ class AuthService {
     }
   }
 
+  Future getdocotr(List doctors) async {
+    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+        .instance
+        .collection('users')
+        .where('role', isEqualTo: "Patient")
+        .get();
+  }
+
   Future singInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
-      await _googleSignIn.signIn();
+          await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
         final googleSingInAuthentication =
-        await googleSignInAccount.authentication;
+            await googleSignInAccount.authentication;
         final AuthCredential authCredential = GoogleAuthProvider.credential(
             accessToken: googleSingInAuthentication.accessToken,
             idToken: googleSingInAuthentication.idToken);
 
         UserCredential userCredential =
-        await _auth.signInWithCredential(authCredential);
+            await _auth.signInWithCredential(authCredential);
         User? user = userCredential.user;
         // print(user);
         return _firebaseUser(user);
@@ -84,6 +92,7 @@ class AuthService {
       String mobileNumber,
       String email,
       String age,
+      String assignedTo,
       String selectedDoctor) async {
     try {
       //Create user
@@ -99,8 +108,8 @@ class AuthService {
 
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
-      updateUserData(
-          fullName, mobileNumber, email, age, 'Patient', selectedDoctor);
+      updateUserData(fullName, mobileNumber, email, age, 'Patient',
+          selectedDoctor, assignedTo);
 
       //Return user
       User? user = userCredential.user;
@@ -137,13 +146,24 @@ class AuthService {
 
   getImages() async {
     var collection = FirebaseFirestore.instance.collection('history');
-    var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+    var docSnapshot =
+        await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
       var values = data?['images'];
       print(values);
       return values;
     }
+  }
+
+  updateDiagnosis(String label) {
+    var diagnosis = [label];
+    FirebaseFirestore.instance
+        .collection("history")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .update({
+      'diagnosis': FieldValue.arrayUnion(diagnosis),
+    });
   }
 
   Future<void> uploadFile(String filePath, String fileName) async {
@@ -154,12 +174,13 @@ class AuthService {
     try {
       await referenceImageToUpload.putFile(file);
       imageUrl = await referenceImageToUpload.getDownloadURL();
-      final Reference storage = FirebaseStorage.instance.ref().child("${_auth.currentUser!.uid}.jpg");
+      final Reference storage =
+          FirebaseStorage.instance.ref().child("${_auth.currentUser!.uid}.jpg");
       final UploadTask task = storage.putFile(file);
       task.then((value) async {
         String url = (await storage.getDownloadURL()).toString();
         var image = [url];
-        var diagnosis = ['Tumor'];
+        //var diagnosis = ['Tumor'];
         FirebaseFirestore.instance
             .collection("history")
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -167,7 +188,7 @@ class AuthService {
           'id': _auth.currentUser!.uid,
           'email': _auth.currentUser!.email,
           'images': FieldValue.arrayUnion(image),
-          'diagnosis': FieldValue.arrayUnion(diagnosis),
+          //'diagnosis': FieldValue.arrayUnion(diagnosis),
           'time': DateTime.now(),
         });
       });
@@ -189,35 +210,8 @@ class AuthService {
     }
   }
 
-  Future<firebase_storage.ListResult> listFiles() async {
-    firebase_storage.ListResult results = await storage.ref(_auth.currentUser!.uid).listAll();
-
-    results.items.forEach((firebase_storage.Reference ref) {
-      print('Found file: $ref');
-    });
-    return results;
-  }
-
-  Future<void> listPhotos() async {
-    firebase_storage.ListResult result = await storage.ref(_auth.currentUser!.uid).listAll();
-
-    for (firebase_storage.Reference ref in result.items) {
-      String url = await firebase_storage.FirebaseStorage.instance
-          .ref(ref.fullPath)
-          .getDownloadURL();
-      print(url);
-    }
-  }
-
-  Future<String> downloadURL(String imageName) async {
-    String downloadURL = (await storage
-        .ref(_auth.currentUser!.uid + '/$imageName')
-        .getDownloadURL()) as String;
-    return downloadURL;
-  }
-
   Future updateUserData(String fullName, String mobileNumber, String email,
-      String age, String role, String selectedDoctor) async {
+      String age, String role, String selectedDoctor,String assignedTo) async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
@@ -228,7 +222,7 @@ class AuthService {
     userModel.number = mobileNumber;
     userModel.age = age;
     userModel.isAssigned = false;
-    userModel.assignedTo = "9mfhaxtlLOXSiNKXnJUXfbUDMdz1";
+    userModel.assignedTo = assignedTo;
 
     await firebaseFirestore
         .collection("users")
