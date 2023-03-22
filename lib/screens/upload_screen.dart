@@ -105,6 +105,8 @@ class _UploadImageScreen extends State<UploadImageScreen> {
                           ),
                           onPressed: () {
                             pickImage(ImageSource.gallery);
+                            print(_auth.getDiagnosis());
+                            print("s");
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(
@@ -206,6 +208,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
       _auth
           .uploadFile(pickedFile.path, pickedFile.name)
           .then((value) => print('Done'));
+         
       uploaded = true;
       setState(() {});
       

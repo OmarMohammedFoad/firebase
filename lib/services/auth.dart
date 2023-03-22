@@ -110,7 +110,7 @@ class AuthService {
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
       updateUserData(fullName, mobileNumber, email, age, 'Patient',
-          selectedDoctor, assignedTo);
+          selectedDoctor, assignedTo,);
 
       //Return user
       User? user = userCredential.user;
@@ -156,6 +156,21 @@ class AuthService {
       return values;
     }
   }
+
+ getDiagnosis() async
+{
+      var collection = FirebaseFirestore.instance.collection("users");
+      var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+      var values;
+
+if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      var values = data?['isAssigned'];
+      }
+      return values;
+
+
+}
 
   updateDiagnosis(String label) {
     var diagnosis = [label];
@@ -223,7 +238,7 @@ e.message;    }
     userModel.name = fullName;
     userModel.number = mobileNumber;
     userModel.age = age;
-    userModel.isAssigned = false;
+    userModel.isAssigned = getDiagnosis();
     userModel.assignedTo = assignedTo;
 
     await firebaseFirestore
