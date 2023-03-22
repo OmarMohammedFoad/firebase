@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/screens/upload_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -131,6 +130,11 @@ class AuthService {
     refStorage.child(_auth.currentUser!.uid).child(imageName);
   }
 
+  final Stream<QuerySnapshot> _historyStream = FirebaseFirestore.instance
+      .collection('history')
+      .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
+
   getImages() async {
     var collection = FirebaseFirestore.instance.collection('history');
     var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
@@ -140,16 +144,6 @@ class AuthService {
       print(values);
       return values;
     }
-  }
-
-  updateDiagnosis(String label){
-    var diagnosis = [label];
-    FirebaseFirestore.instance
-        .collection("history")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .update({
-      'diagnosis': FieldValue.arrayUnion(diagnosis),
-    });
   }
 
   Future<void> uploadFile(String filePath, String fileName) async {
@@ -165,7 +159,7 @@ class AuthService {
       task.then((value) async {
         String url = (await storage.getDownloadURL()).toString();
         var image = [url];
-        //var diagnosis = [label];
+        var diagnosis = ['Tumor'];
         FirebaseFirestore.instance
             .collection("history")
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -173,7 +167,7 @@ class AuthService {
           'id': _auth.currentUser!.uid,
           'email': _auth.currentUser!.email,
           'images': FieldValue.arrayUnion(image),
-          //'diagnosis': FieldValue.arrayUnion(diagnosis),
+          'diagnosis': FieldValue.arrayUnion(diagnosis),
           'time': DateTime.now(),
         });
       });

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';
-
+import './Register.dart';
 class Login extends StatefulWidget {
   final Function? toggleView;
   Login({this.toggleView});
@@ -17,7 +17,6 @@ class Login extends StatefulWidget {
 
 class _Login extends State<Login> {
   bool _obscureText = true;
-
   final _email = TextEditingController();
   final _password = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -73,6 +72,7 @@ class _Login extends State<Login> {
     final txtbutton = TextButton(
         onPressed: () {
           widget.toggleView!();
+          
         },
         child: const Text('New? Register here'));
 
@@ -187,6 +187,7 @@ class _Login extends State<Login> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  
                   loginAnonymousButton,
                   const SizedBox(height: 45.0),
                   emailField,
