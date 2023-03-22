@@ -1,13 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/screens/historyList.dart';
 import 'package:firebase/screens/profile_screen.dart';
-import 'package:firebase/screens/upload_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase/screens/historyScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 
-import 'history_screen.dart';
+import 'uploadImage.dart';
 
 
 class Home extends StatefulWidget {
@@ -48,7 +44,7 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
                     if (value == 0) {
                       //print("My account menu is selected.");
                       Navigator.push(
-                          context, MaterialPageRoute(builder: (context) => HistoryListScreen())
+                          context, MaterialPageRoute(builder: (context) => HistoryList())
                       );
                     }
                   },
@@ -76,6 +72,8 @@ class _Home extends State<Home> with SingleTickerProviderStateMixin{
           controller: _tabController,
           children: <Widget>[
             //KidneyDiseaseDetection(),
+            //UploadImageScreen(),
+            //UploadScreen(),
             UploadImageScreen(),
             //HistoryScreen(),
             //HistoryListScreen(),

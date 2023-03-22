@@ -54,14 +54,6 @@ class AuthService {
     }
   }
 
-  Future getdocotr(List doctors) async {
-    final QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
-        .instance
-        .collection('users')
-        .where('role', isEqualTo: "Patient")
-        .get();
-  }
-
   Future singInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleSignInAccount =
@@ -138,11 +130,6 @@ class AuthService {
   getImage(String imageName) {
     refStorage.child(_auth.currentUser!.uid).child(imageName);
   }
-
-  final Stream<QuerySnapshot> _historyStream = FirebaseFirestore.instance
-      .collection('history')
-      .where("id", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-      .snapshots();
 
   getImages() async {
     var collection = FirebaseFirestore.instance.collection('history');

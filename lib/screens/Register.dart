@@ -1,8 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 
 class Register extends StatefulWidget {
