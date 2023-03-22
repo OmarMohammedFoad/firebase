@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../services/auth.dart';
 
@@ -24,6 +25,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
   String? email;
   String? name;
   bool uploaded = false;
+  List<File>? images;
 
   @override
   void initState() {
@@ -49,6 +51,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
       labels: "assets/labels.txt",
     );
     print("Models loading status: $res");
+    print(imageSelect);
   }
 
   Future imageClassification(File image) async {
@@ -61,8 +64,10 @@ class _UploadImageScreen extends State<UploadImageScreen> {
     );
     setState(() {
       _results = recognitions!;
+
       _image = image;
       imageSelect = true;
+      
     });
   }
 
@@ -195,6 +200,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
   Future pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     File image = File(pickedFile!.path);
+     
     if (pickedFile != null) {
       imageSelect = true;
       _auth
@@ -202,6 +208,7 @@ class _UploadImageScreen extends State<UploadImageScreen> {
           .then((value) => print('Done'));
       uploaded = true;
       setState(() {});
+      
       imageClassification(image);
       return;
     }

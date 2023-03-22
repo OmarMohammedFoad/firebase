@@ -74,6 +74,9 @@ class _DiseaseDetectionState extends State<KidneyDiseaseDetection> {
     );
   }
 
+
+  
+
   pickImage() async {
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     File image = File(pickedFile!.path);

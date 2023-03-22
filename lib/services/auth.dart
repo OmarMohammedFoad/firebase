@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -168,6 +169,8 @@ class AuthService {
 
   Future<void> uploadFile(String filePath, String fileName) async {
     File file = File(filePath);
+      
+
     Reference referenceRoot = FirebaseStorage.instance.ref();
     Reference referenceDirImage = referenceRoot.child(_auth.currentUser!.uid);
     Reference referenceImageToUpload = referenceDirImage.child(fileName);
@@ -177,6 +180,7 @@ class AuthService {
       final Reference storage =
           FirebaseStorage.instance.ref().child("${_auth.currentUser!.uid}.jpg");
       final UploadTask task = storage.putFile(file);
+
       task.then((value) async {
         String url = (await storage.getDownloadURL()).toString();
         var image = [url];
@@ -187,15 +191,13 @@ class AuthService {
             .update({
           'id': _auth.currentUser!.uid,
           'email': _auth.currentUser!.email,
-          'images': FieldValue.arrayUnion(image),
+          'images':FieldValue.arrayUnion(image),
           //'diagnosis': FieldValue.arrayUnion(diagnosis),
           'time': DateTime.now(),
         });
       });
-      print('task $task');
     } on firebase_core.FirebaseException catch (e) {
-      print(e);
-    }
+e.message;    }
   }
 
   Future<void> uploadImageFromCamera(String filePath, String fileName) async {
