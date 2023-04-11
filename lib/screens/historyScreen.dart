@@ -35,17 +35,16 @@ class _HistoryListState extends State<HistoryList> {
                       itemCount: snapshot.data!.docs.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        childAspectRatio: 3 / 2,
-                        crossAxisSpacing: 10,
+                        //childAspectRatio: 2 / 3,
+                        //crossAxisSpacing: 5,
                         mainAxisSpacing: 10,
                       ),
                       itemBuilder: (context, index) {
                         return Container(
-                          alignment: Alignment.center,
+                          //alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: Colors.grey,
-                              borderRadius: BorderRadius.circular(0.2)),
-                          margin: EdgeInsets.all(3),
+                              color: Colors.white70,
+                              borderRadius: BorderRadius.circular(30.0)),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -53,14 +52,14 @@ class _HistoryListState extends State<HistoryList> {
                                 flex: 1,
                                 fit: FlexFit.tight,
                                 child: Container(
-                                  height: 190.0,
+                                  height: 200.0,
                                   child: FadeInImage.memoryNetwork(
                                       placeholder: kTransparentImage,
                                       image: snapshot
                                           .data!.docChanges[index].doc['url']),
                                 ),
                               ),
-                              SizedBox(height: 5.0),
+                              SizedBox(height: 10),
                               Padding(
                                 padding: const EdgeInsets.only(
                                     left: 10.0, bottom: 5.0, right: 10.0),
@@ -73,10 +72,16 @@ class _HistoryListState extends State<HistoryList> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Flexible(
-                                            child: Text('Diagnosis'),
+                                            child: Text('Diagnosis',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),),
                                           ),
+                                          SizedBox(height: 5),
                                           Text(snapshot.data!.docChanges[index]
                                               .doc['diagnosis']),
+                                          SizedBox(height: 5),
                                         ],
                                       ),
                                     ]),
