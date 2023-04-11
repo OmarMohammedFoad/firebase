@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/models/TermsAndConditionsDialog%5B1%5D.dart';
 import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
@@ -23,6 +24,8 @@ class Register extends StatefulWidget {
 
 class _Register extends State<Register> {
   final AuthService _auth = AuthService();
+    bool? _isChecked = false;
+
 
   @override
   void initState() {
@@ -93,6 +96,39 @@ class _Register extends State<Register> {
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
+    final  Terms = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("I accept the terms and conditions"),
+          Row(
+            children: [
+              Checkbox(
+          value: _isChecked,
+          onChanged: (newValue) {
+            setState(() {
+              _isChecked = newValue!;
+            });
+          },
+        ),
+        InkWell(
+          child:const  Text(
+            'Read the terms and conditions',
+            style: TextStyle(decoration: TextDecoration.underline),
+          ),
+        
+        onTap: () {
+              showDialog(
+              context: context,
+              builder: (BuildContext context) => TermsAndConditionsDialog( 
+                               
+              ),
+            );}
+        )
+
+            ],
+          )
+        ],
+    );
     final emailField = TextFormField(
         controller: _email,
         autofocus: false,
@@ -264,6 +300,8 @@ class _Register extends State<Register> {
 
                   const SizedBox(height: 25.0),
                   txtbutton,
+                  const SizedBox(height: 35.0),
+                  Terms,
                   const SizedBox(height: 35.0),
                   registerButton,
                   const SizedBox(height: 15.0),
