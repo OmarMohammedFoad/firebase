@@ -31,7 +31,6 @@ class _Register extends State<Register> {
   void initState() {
     super.initState();
     _fetchDoctors();
-    print(_items);
   }
 
   bool _obscureText = true;
@@ -186,8 +185,6 @@ class _Register extends State<Register> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-
-
           if (_formKey.currentState!.validate()) {
             dynamic result = await _auth.registerEmailPassword(
                 LoginUser(email: _email.text, password: _password.text),
@@ -198,7 +195,6 @@ class _Register extends State<Register> {
                 _selectedItem.toString(),
                 _selectedItem.toString()
             );
-
             if (result.uid == null) {
 
               //null means unsuccessfull authentication

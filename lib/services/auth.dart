@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -106,6 +107,7 @@ class AuthService {
 
       //Return user
       User? user = userCredential.user;
+      
       return _firebaseUser(user);
     } on FirebaseAuthException catch (e) {
       return FirebaseUser(code: e.code, uid: null);
@@ -137,27 +139,27 @@ class AuthService {
     var docSnapshot =
         await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
     if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
+      Map<String,dynamic>? data = docSnapshot.data();
       var values = data?['images'];
-      print(values);
       return values;
     }
   }
 
- getDiagnosis() async
-{
-      var collection = FirebaseFirestore.instance.collection("users");
-      var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
-      var values;
+//  getDiagnosis() async
+// {
+//       var collection = FirebaseFirestore.instance.collection("users");
+//       var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+//       var values;
+     
 
-if (docSnapshot.exists) {
-      Map<String, dynamic>? data = docSnapshot.data();
-      var values = data?['isAssigned'];
-      }
-      return values;
+// if (docSnapshot.exists) {
+//       Map<dynamic, dynamic>? data = docSnapshot.data();
+//       var values = data?['isAssigned'];
+//       }
+//       return values;
 
 
-}
+// }
 
   updateDiagnosis(String label) {
     var diagnosis = [label];
@@ -215,7 +217,8 @@ e.message;    }
   }
 
   Future updateUserData(String fullName, String mobileNumber, String email,
-      String age, String role, String selectedDoctor,String assignedTo) async {
+      String age, String role, String selectedDoctor,String assignedTo) 
+      async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
@@ -225,31 +228,31 @@ e.message;    }
     userModel.name = fullName;
     userModel.number = mobileNumber;
     userModel.age = age;
-    userModel.isAssigned = getDiagnosis();
+    userModel.isAssigned = true;
     userModel.assignedTo = assignedTo;
+  
+    
+      await collection.doc(user.uid).set(userModel.toMap());
 
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
+        
+        
 
-    Future updateUserData(String? uid, String fullName, String mobileNumber,
-        String email, String age) async {
-      collection
-          .where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-          .limit(1)
-          .get()
-          .then((QuerySnapshot querySnapshot) {
-        if (querySnapshot.docs.isEmpty) {
-          collection.add({
-            'uid': uid,
-            'fullName': fullName,
-            'mobileNumber': mobileNumber,
-            'email': email,
-            'age': age,
-          });
-        }
-      }).catchError((error) {});
+    // Future updateUserData(String? uid, String fullName, String mobileNumber,
+    //     String email, String age) async {
+    //   collection
+    //       .where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+    //       .limit(1)
+    //       .get()
+    //       .then((QuerySnapshot querySnapshot) {
+    //     if (querySnapshot.docs.isEmpty) {
+    //       collection.add({
+    //         'uid': uid,
+    //         'fullName': fullName,
+    //         'mobileNumber': mobileNumber,
+    //         'email': email,
+    //         'age': age,
+    //       });
+    //     }
+    //   }).catchError((error) {});
     }
   }
-}
