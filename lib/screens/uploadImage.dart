@@ -65,7 +65,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       print('results are $_result');
       _name = _result[0]['label'];
       _confidence = _result != null
-          ? (_result[0]['confidence'] * 100.0).toString().substring(0, 2) + '%'
+          ? (_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
           : "";
       isClassified = true;
       print('Diagnosis $_name and confidence $_confidence');
@@ -223,7 +223,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   }
 
   getImage(ImageSource source) async {
-    var tempStore = await ImagePicker().pickImage(source: ImageSource.gallery);
+    var tempStore = await ImagePicker().pickImage(source: source);
     setState(() {
       pickedImage = File(tempStore!.path);
       isImageLoaded = true;
