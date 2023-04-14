@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/models/TermsAndConditionsDialog%5B1%5D.dart';
 import 'package:flutter/material.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';
-
+import 'TermsAndConditionsDialog.dart';
 
 class Register extends StatefulWidget {
   final Function? toggleView;
@@ -78,21 +77,23 @@ class _Register extends State<Register> {
     final ageField = TextFormField(
       controller: _age,
       autofocus: false,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Age",
           border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
     final mobileField = TextFormField(
       controller: _mobileNumber,
       autofocus: false,
+      keyboardType: TextInputType.number,
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Mobile Number",
           border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
     final  Terms = Column(
@@ -130,6 +131,7 @@ class _Register extends State<Register> {
     );
     final emailField = TextFormField(
         controller: _email,
+        keyboardType: TextInputType.emailAddress,
         autofocus: false,
         validator: (value) {
           if (value != null) {
@@ -187,13 +189,13 @@ class _Register extends State<Register> {
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
             dynamic result = await _auth.registerEmailPassword(
-                LoginUser(email: _email.text, password: _password.text),
-                _fullName.text.trim(),
-                _mobileNumber.text.trim(),
-                _email.text.trim(),
-                _age.text.trim(),
-                _selectedItem.toString(),
-                _selectedItem.toString()
+              LoginUser(email: _email.text, password: _password.text),
+              _fullName.text.trim(),
+              _mobileNumber.text.trim(),
+              _email.text.trim(),
+              _age.text.trim(),
+              _selectedItem.toString(),
+              false,
             );
             if (result.uid == null) {
 
@@ -216,7 +218,7 @@ class _Register extends State<Register> {
       ),
     );
 
-    final droplist =  Container(
+    final dropList = Container(
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.grey.shade400,
@@ -224,7 +226,7 @@ class _Register extends State<Register> {
         ),
         borderRadius: BorderRadius.circular(5.0),
       ),
-      child:   DropdownButton<String>(
+      child: DropdownButton<String>(
         value: _selectedItem,
         icon: Icon(Icons.add_box),
         iconDisabledColor:Colors.black ,
@@ -233,21 +235,14 @@ class _Register extends State<Register> {
           return DropdownMenuItem<String>(
             value: value["id"],
             child: Text(value["name"]),
-
           );
-
         }).toList(),
-
         onChanged: (selectedItem) {
-
           setState(() {
             print(_selectedItem);
             _selectedItem = selectedItem;
-
           });
-
         },
-
       ),
     );
 
@@ -275,38 +270,38 @@ class _Register extends State<Register> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 45.0),
-                  nameField,
-                  const SizedBox(height: 25.0),
-                  mobileField,
-                  const SizedBox(height: 25.0),
-                  ageField,
-                  const SizedBox(height: 25.0),
-                  emailField,
-                  const SizedBox(height: 25.0),
-                  passwordField,
-                  const SizedBox(height: 35.0),
-                  Center(
-                    child: Row(children: [
+                const SizedBox(height: 45.0),
+                nameField,
+                const SizedBox(height: 25.0),
+                mobileField,
+                const SizedBox(height: 25.0),
+                ageField,
+                const SizedBox(height: 25.0),
+                emailField,
+                const SizedBox(height: 25.0),
+                passwordField,
+                const SizedBox(height: 35.0),
+                Center(
+                  child: Row(
+                    children: [
                       text,
                       const SizedBox(width: 35.0),
-                      droplist//  droplist,
-                    ],),
+                      dropList //  droplist,
+                    ],
                   ),
-
-                  const SizedBox(height: 25.0),
-                  txtbutton,
-                  const SizedBox(height: 35.0),
-                  Terms,
-                  const SizedBox(height: 35.0),
-                  registerButton,
-                  const SizedBox(height: 15.0),
-
-                ],
-              ),
+                ),
+                const SizedBox(height: 25.0),
+                txtbutton,
+                const SizedBox(height: 35.0),
+                Terms,
+                const SizedBox(height: 35.0),
+                registerButton,
+                const SizedBox(height: 15.0),
+              ],
             ),
           ),
-          ]),
+        ),
+      ]),
     );
   }
 }

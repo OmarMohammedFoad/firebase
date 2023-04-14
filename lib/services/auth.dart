@@ -87,7 +87,7 @@ class AuthService {
       String email,
       String age,
       String assignedTo,
-      String selectedDoctor) async {
+      bool isAssigned) async {
     try {
       //Create user
       UserCredential userCredential = await FirebaseAuth.instance
@@ -103,7 +103,7 @@ class AuthService {
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
       updateUserData(fullName, mobileNumber, email, age, 'Patient',
-          selectedDoctor, assignedTo,);
+        assignedTo, false);
 
       //Return user
       User? user = userCredential.user;
@@ -144,22 +144,6 @@ class AuthService {
       return values;
     }
   }
-
-//  getDiagnosis() async
-// {
-//       var collection = FirebaseFirestore.instance.collection("users");
-//       var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
-//       var values;
-     
-
-// if (docSnapshot.exists) {
-//       Map<dynamic, dynamic>? data = docSnapshot.data();
-//       var values = data?['isAssigned'];
-//       }
-//       return values;
-
-
-// }
 
   updateDiagnosis(String label) {
     var diagnosis = [label];
@@ -217,7 +201,7 @@ e.message;    }
   }
 
   Future updateUserData(String fullName, String mobileNumber, String email,
-      String age, String role, String selectedDoctor,String assignedTo) 
+      String age, String role, String selectedDoctor, bool isAssigned)
       async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
@@ -228,10 +212,9 @@ e.message;    }
     userModel.name = fullName;
     userModel.number = mobileNumber;
     userModel.age = age;
-    userModel.isAssigned = true;
-    userModel.assignedTo = assignedTo;
-  
-    
+    userModel.isAssigned = false;
+    userModel.assignedTo = selectedDoctor;
+
       await collection.doc(user.uid).set(userModel.toMap());
 
         

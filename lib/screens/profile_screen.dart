@@ -69,11 +69,11 @@ class ProfilePage extends StatelessWidget {
                           itemBuilder: (context, i) {
                             print(context);
                             var data = snapshot.data!.docs[i];
-                            // print(data);
-                            // email = data['email'];
-                            // name = data['name'];
-                            // age = data['age'];
-                            // phone = data['number'];
+                            print(data);
+                            email = data['email'];
+                            name = data['name'];
+                            age = data['age'];
+                            phone = data['number'];
 //                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
                             return Expanded(
                               child: Center(
@@ -127,7 +127,7 @@ class ProfilePage extends StatelessWidget {
                                                               Icon(Icons.email),
                                                               title: Text("Email"),
                                                               subtitle: Text(
-                                                                  "omddRar"),
+                                                                  email!),
                                                             ),
                                                             ListTile(
                                                               leading:
