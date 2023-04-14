@@ -246,7 +246,23 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     }
   }
 
+  String assignedTo = '';
+  String userId = FirebaseAuth.instance.currentUser!.uid;
+
   Future<void> uploadFile() async {
+    try {
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .get();
+      if (snapshot.exists) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        assignedTo = data['assignedTo'];
+      }
+    } catch (e) {
+      print('Error getting assignedTo value: $e');
+    }
+
     ref = firebase_storage.FirebaseStorage.instance
         .ref()
         .child(FirebaseAuth.instance.currentUser!.uid)
@@ -259,6 +275,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
           'email': FirebaseAuth.instance.currentUser!.email,
           'diagnosis': _name,
           'time': DateTime.now(),
+          'assignedTo': assignedTo,
         });
       });
     });

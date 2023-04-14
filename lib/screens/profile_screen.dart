@@ -48,7 +48,6 @@ class ProfilePage extends StatelessWidget {
           child: Column(
             children: [
               StreamBuilder(
-                
                   stream: FirebaseFirestore.instance
                       .collection('users')
                       .where("uid", isEqualTo: currentUser.currentUser!.uid)
@@ -58,10 +57,7 @@ class ProfilePage extends StatelessWidget {
                     if (snapshot.hasError) {
                       return Text("Something went wrong");
                     }
-
                     if (snapshot.hasData) {
-                            
-
                       return ListView.builder(
                           itemCount: snapshot.data!.docs.length,
                           shrinkWrap: true,
