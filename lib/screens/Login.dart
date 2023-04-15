@@ -113,8 +113,11 @@ class _Login extends State<Login> {
         minWidth: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
-          dynamic result =  _auth.singInWithGoogle();
-          if (result.uid == null) { //null means unsuccessfull authentication
+          print("pressed");
+          dynamic result =   await _auth.singInWithGoogle();
+          
+          
+          if (result.uid == null) {
             showDialog(
                 context: context,
                 builder: (context) {

@@ -70,12 +70,11 @@ class AuthService {
         UserCredential userCredential =
             await _auth.signInWithCredential(authCredential);
         User? user = userCredential.user;
-        // print(user);
         return _firebaseUser(user);
       }
     } catch (e) {
       // print("ss");
-      // print(e);
+      print(e);
       return FirebaseUser(code: e.toString(), uid: null);
     }
   }
@@ -125,10 +124,14 @@ class AuthService {
     }
   }
 
-  Future googleSignOut() async {
-    await _auth.signOut();
-    await _googleSignIn.signOut();
-  }
+  Future  signOutWithGoogle() async {
+  // Sign out with firebase
+  // await _auth.signOut();
+  // Sign out with google
+  await _googleSignIn.disconnect();
+      FirebaseAuth.instance.signOut();
+
+}
 
   getImage(String imageName) {
     refStorage.child(_auth.currentUser!.uid).child(imageName);
