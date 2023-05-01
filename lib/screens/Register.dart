@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../models/loginuser.dart';
 import '../services/auth.dart';
 import 'TermsAndConditionsDialog.dart';
+import 'dart:io';
 
 class Register extends StatefulWidget {
   final Function? toggleView;
@@ -22,15 +25,18 @@ class Register extends StatefulWidget {
 
 
 class _Register extends State<Register> {
-  final AuthService _auth = AuthService();
-    bool? _isChecked = false;
-
-
   @override
   void initState() {
     super.initState();
     _fetchDoctors();
   }
+  final AuthService _auth = AuthService();
+    bool? _isChecked = false;
+  File? _image;
+    String imageUrl = '';
+
+
+
 
   bool _obscureText = true;
   final _email = TextEditingController();
@@ -43,6 +49,7 @@ class _Register extends State<Register> {
 
 
   String? _selectedItem;
+  XFile? image;
   String? ss;
 
 
@@ -73,6 +80,16 @@ class _Register extends State<Register> {
           border:
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
+
+     Future getImage() async {
+       image = await ImagePicker().pickImage(source:ImageSource.gallery);
+
+      setState(() {
+        
+        // print(_image.toString());
+          print('Image Path ${image?.path}');
+      });
+    }
 
     final ageField = TextFormField(
       controller: _age,
@@ -172,7 +189,49 @@ class _Register extends State<Register> {
             ),
             border:
             OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))));
-
+final profilepicture  =  Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+             const SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.center,
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundColor:Color.fromARGB(255, 236, 239, 250),
+                      child: ClipOval(
+                        child:   SizedBox(
+                          width: 180.0,
+                          height: 180.0,
+                          child: (image!=null)?Image.file(
+                            File(image!.path),
+                            fit: BoxFit.fill,
+                          ):Image.network(
+                                  "https://wallpapercave.com/wp/wp9566480.png",                            
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 60.0),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.camera_alt,
+                        size: 30.0,
+                      ),
+                      onPressed: () {
+                        getImage();
+                      },
+                    ),
+                  ),
+                ],
+              )]);
     final txtbutton = TextButton(
         onPressed: () {
           widget.toggleView!();
@@ -188,6 +247,31 @@ class _Register extends State<Register> {
         padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () async {
           if (_formKey.currentState!.validate()) {
+            String uniqueFileName =
+                        DateTime.now().millisecondsSinceEpoch.toString();
+
+                    /*Step 2: Upload to Firebase storage*/
+                    //Install firebase_storage
+                    //Import the library
+
+                    //Get a reference to storage root
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages =
+                        referenceRoot.child('images');
+
+                    //Create a reference for the image to be stored
+                    Reference referenceImageToUpload =
+                        referenceDirImages.child(uniqueFileName);
+
+                    //Handle errors/success
+                    try {
+                      //Store the file
+                      await referenceImageToUpload.putFile(File(image!.path));
+                      //Success: get the download URL
+                      imageUrl = await referenceImageToUpload.getDownloadURL();
+                    } catch (error) {
+                      //Some error occurred
+                    }
             dynamic result = await _auth.registerEmailPassword(
               LoginUser(email: _email.text, password: _password.text),
               _fullName.text.trim(),
@@ -195,6 +279,8 @@ class _Register extends State<Register> {
               _email.text.trim(),
               _age.text.trim(),
               _selectedItem.toString(),
+              imageUrl,
+
               false,
             );
             if (result.uid == null) {
@@ -218,6 +304,9 @@ class _Register extends State<Register> {
       ),
     );
 
+
+
+
     final dropList = Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -240,6 +329,8 @@ class _Register extends State<Register> {
         onChanged: (selectedItem) {
           setState(() {
             print(_selectedItem);
+           
+
             _selectedItem = selectedItem;
           });
         },
@@ -270,6 +361,7 @@ class _Register extends State<Register> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                profilepicture,
                 const SizedBox(height: 45.0),
                 nameField,
                 const SizedBox(height: 25.0),
@@ -297,6 +389,7 @@ class _Register extends State<Register> {
                 const SizedBox(height: 35.0),
                 registerButton,
                 const SizedBox(height: 15.0),
+
               ],
             ),
           ),

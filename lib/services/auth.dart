@@ -86,6 +86,7 @@ class AuthService {
       String email,
       String age,
       String assignedTo,
+      String imgurl,
       bool isAssigned) async {
     try {
       //Create user
@@ -102,7 +103,7 @@ class AuthService {
       //Add user details
       //addUserDetails(fullName, mobileNumber, email, age);
       updateUserData(fullName, mobileNumber, email, age, 'Patient',
-        assignedTo, false);
+        assignedTo, false,imgurl);
 
       //Return user
       User? user = userCredential.user;
@@ -159,6 +160,7 @@ class AuthService {
   }
 
   Future<void> uploadFile(String filePath, String fileName) async {
+    print(filePath);
     File file = File(filePath);
       
 
@@ -204,7 +206,7 @@ e.message;    }
   }
 
   Future updateUserData(String fullName, String mobileNumber, String email,
-      String age, String role, String selectedDoctor, bool isAssigned)
+      String age, String role, String selectedDoctor, bool isAssigned,String imgurl)
       async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
@@ -216,6 +218,7 @@ e.message;    }
     userModel.number = mobileNumber;
     userModel.age = age;
     userModel.isAssigned = false;
+    userModel.imgurl = imgurl;
     userModel.assignedTo = selectedDoctor;
 
       await collection.doc(user.uid).set(userModel.toMap());

@@ -5,6 +5,7 @@ class UserModel {
   String? name;
   String? number;
   String? age;
+  String? imgurl;
   bool? isAssigned;
   String? assignedTo;
 
@@ -12,6 +13,7 @@ class UserModel {
       {this.age,
       this.email,
       this.isAssigned,
+      this.imgurl,
       this.name,
       this.number,
       this.role,
@@ -23,6 +25,7 @@ class UserModel {
         "uid": uid,
         "role": role,
         "age": age,
+        "imgurl": imgurl,
         "isAssigned": isAssigned,
         "assignedTo": assignedTo,
         "number": number,
