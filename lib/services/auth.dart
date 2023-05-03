@@ -149,6 +149,26 @@ class AuthService {
     }
   }
 
+<<<<<<< Updated upstream
+=======
+// Future getDiagnosis() async
+// {
+//       var collection = FirebaseFirestore.instance.collection("users");
+//       var docSnapshot = await collection.doc(FirebaseAuth.instance.currentUser!.uid).get();
+//       var values="";
+      
+     
+
+// if (docSnapshot.exists) {
+//       Map<dynamic, dynamic>? data = docSnapshot.data();
+//        values = data?['isAssigned'];
+//       }
+//       return values;
+
+
+// }
+
+>>>>>>> Stashed changes
   updateDiagnosis(String label) {
     var diagnosis = [label];
     FirebaseFirestore.instance
@@ -217,10 +237,17 @@ e.message;    }
     userModel.name = fullName;
     userModel.number = mobileNumber;
     userModel.age = age;
+<<<<<<< Updated upstream
     userModel.isAssigned = false;
     userModel.imgurl = imgurl;
     userModel.assignedTo = selectedDoctor;
 
+=======
+    // userModel.isAssigned = getDiagnosis();
+    userModel.assignedTo = assignedTo;
+  
+    
+>>>>>>> Stashed changes
       await collection.doc(user.uid).set(userModel.toMap());
 
         

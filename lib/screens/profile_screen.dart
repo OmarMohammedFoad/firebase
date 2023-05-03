@@ -80,6 +80,7 @@ class ProfilePage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset : false,
       body: SingleChildScrollView(
+<<<<<<< Updated upstream
         child: Column(
           children: [
             StreamBuilder(
@@ -123,6 +124,70 @@ class ProfilePage extends StatelessWidget {
                                                 child: Image.network(
                               img!,                            
                                                   fit: BoxFit.fill,
+=======
+        child: Expanded(
+          child: Column(
+            children: [
+              StreamBuilder(
+                
+                  stream: FirebaseFirestore.instance
+                      .collection('users')
+                      .where("uid", isEqualTo: currentUser.currentUser!.uid)
+                      .snapshots(),
+                  builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    //Error Handling conditions
+                    if (snapshot.hasError) {
+                      return Text("Something went wrong");
+                    }
+
+                    if (snapshot.hasData) {
+                            
+
+                      return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          shrinkWrap: true,
+
+                          itemBuilder: (context, i) {
+                            print(context);
+                            var data = snapshot.data!.docs[i];
+                            email = data['email'];
+                            name = data['name'];
+                            age = data['age'];
+                            phone = data['number'];
+//                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
+                            return Expanded(
+                              child: Center(
+                                child: Container(
+                                  margin: const EdgeInsets.all(20),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        name!,
+                                        style: TextStyle(
+                                            fontSize: 22, fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        padding: EdgeInsets.all(10),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Container(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0, bottom: 4.0),
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                "User Information",
+                                                style: TextStyle(
+                                                  color: Colors.black87,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 16,
+>>>>>>> Stashed changes
                                                 ),
                                               ),
                                             ),
