@@ -5,12 +5,8 @@ class UserModel {
   String? name;
   String? number;
   String? age;
-<<<<<<< Updated upstream
   String? imgurl;
   bool? isAssigned;
-=======
-  Future<dynamic>? isAssigned;
->>>>>>> Stashed changes
   String? assignedTo;
 
   UserModel(
