@@ -1,13 +1,11 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:tflite/tflite.dart';
-
+import 'package:tflite/tflite.dart';
 
 import 'historyScreen.dart';
 
@@ -22,7 +20,6 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   File? pickedImage;
   bool isImageLoaded = false;
   bool isClassified = false;
-  
 
   late List _result;
   String _name = "";
@@ -31,49 +28,49 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   CollectionReference? imgRef;
   firebase_storage.Reference? ref;
 
-  // loadModel() async {
-  //   var result = await Tflite.loadModel(
-  //     labels: "assets/labels.txt",
-  //     model: "assets/model.tflite",
-  //   );
+  loadModel() async {
+    var result = await Tflite.loadModel(
+      labels: "assets/labels.txt",
+      model: "assets/model.tflite",
+    );
 
-  //   print('Results after loading the model: $result');
-  // }
+    print('Results after loading the model: $result');
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // loadModel();
-    // imgRef = FirebaseFirestore.instance.collection('temp');
+    loadModel();
+    imgRef = FirebaseFirestore.instance.collection('temp');
   }
 
   @override
-  // void dispose() {
-  //   // TODO: implement dispose
-  //   super.dispose();
-  //   // Tflite.close();
-  // }
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Tflite.close();
+  }
 
-  // Future imageClassification(File image) async {
-  //   final List? recognitions = await Tflite.runModelOnImage(
-  //     path: image.path,
-  //     numResults: 4,
-  //     threshold: 0.05,
-  //     imageMean: 127.5,
-  //     imageStd: 127.5,
-  //   );
-  //   setState(() {
-  //     _result = recognitions!;
-  //     print('results are $_result');
-  //     _name = _result[0]['label'];
-  //     _confidence = _result != null
-  //         ? (_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
-  //         : "";
-  //     isClassified = true;
-  //     print('Diagnosis $_name and confidence $_confidence');
-  //   });
-  // }
+  Future imageClassification(File image) async {
+    final List? recognitions = await Tflite.runModelOnImage(
+      path: image.path,
+      numResults: 4,
+      threshold: 0.05,
+      imageMean: 127.5,
+      imageStd: 127.5,
+    );
+    setState(() {
+      _result = recognitions!;
+      print('results are $_result');
+      _name = _result[0]['label'];
+      _confidence = _result != null
+          ? (_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
+          : "";
+      isClassified = true;
+      print('Diagnosis $_name and confidence $_confidence');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -231,8 +228,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       pickedImage = File(tempStore!.path);
       isImageLoaded = true;
     });
-    // imageClassification(pickedImage!);
-    // if (tempStore == null) retrieveLostData();
+    imageClassification(pickedImage!);
+    if (tempStore == null) retrieveLostData();
   }
 
   Future<void> retrieveLostData() async {
