@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import "package:firebase/services/auth.dart";
+// import "package:firebase/services/auth.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -12,13 +12,13 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  String _name = "";
-  String _phoneNumber = "";
+  String _name = "John Doe";
+  String _phoneNumber = "123-456-7890";
   DateTime _dateOfBirth = DateTime(1990, 1, 1);
-  String _gender = "";
-  String _bloodGroup = "";
-  int _height = 0;
-  int _weight = 0;
+  String _gender = "Male";
+  String _bloodGroup = "AB+";
+  int _height = 170;
+  int _weight = 70;
 
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
@@ -27,7 +27,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   TextEditingController _bloodGroupController = TextEditingController();
   TextEditingController _heightController = TextEditingController();
   TextEditingController _weightController = TextEditingController();
-  final AuthService _auth = AuthService();
+  // final AuthService _auth = AuthService();
 
 
 
@@ -82,31 +82,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             onPressed: () {
               if (_formKey.currentState!.validate()) {
                 // Save the changes to the user's profile
-
-                final data = {"name": "omar"};
-
-
-                // print(docuser);
+                final docuser = FirebaseFirestore.instance.collection('users').doc("id");
+                docuser.update({
+                  "name" : _name
+                });
                 _name = _nameController.text;
                 _phoneNumber = _phoneNumberController.text;
                 _gender = _genderController.text;
                 _bloodGroup = _bloodGroupController.text;
                 _height = int.parse(_heightController.text);
                 _weight = int.parse(_weightController.text);
-                // FirebaseFirestore.instance
-                //     .collection("users")
-                //     .doc(FirebaseAuth.instance.currentUser!.uid)
-                //     .update({
-                //   "name": _name,
-                //   "number": _phoneNumber,
-                //   "gender" : _gender,
-                //   "height" : _height,
-                //   "weight" : _weight,
-                //   "bloodType": _bloodGroup
-                //
-                //
-                // });
-                _auth.updateUserDataEdit(_name, _phoneNumber, _gender, _height, _weight, _bloodGroup);
                 Navigator.of(context).pop();
               }
             },
@@ -212,7 +197,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
           ),
         ),
-     ),
-);
-}
+      ),
+    );
+  }
 }

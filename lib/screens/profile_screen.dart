@@ -18,6 +18,10 @@ class ProfilePage extends StatelessWidget {
   String? age = '';
   String? phone = '';
   String? img = '';
+  String? gender ="";
+  String? bloodType ="";
+  int? height = 0;
+  int? weight = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +57,33 @@ class ProfilePage extends StatelessWidget {
       (context).push(MaterialPageRoute(builder: (context) => EditProfileScreen()
 )))
   };
+     final UpdateData = Material(
+      elevation: 5.0,
+      borderRadius: BorderRadius.circular(30.0),
+      color: Theme
+          .of(context)
+          .primaryColor,
+      child: MaterialButton(
+        minWidth: MediaQuery
+            .of(context)
+            .size
+            .width,
+        padding: const EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        onPressed: () async {
 
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditProfileScreen()));
+
+
+        },
+        child: Text(
+          "Update",
+          style: TextStyle(color: Theme
+              .of(context)
+              .primaryColorLight),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
      final GoogleSignOut = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -108,7 +138,12 @@ class ProfilePage extends StatelessWidget {
                           name = data['name'];
                           age = data['age'];
                           img=data['imgurl'];
-                          
+                          gender =data['gender'];
+                          height =data['height'];
+                          weight =data['weight'];
+                          bloodType =data['bloodType'];
+
+
                           phone = data['number'];
           //                        return Text("Full Name and Email: ${data['fullName']} ${data['email']}");
                           return Center(
@@ -195,6 +230,34 @@ class ProfilePage extends StatelessWidget {
                                                           title: Text("Age"),
                                                           subtitle:
                                                           Text(age!),
+                                                        ),
+                                                        ListTile(
+                                                          leading:
+                                                          Icon(Icons.numbers),
+                                                          title: Text("gender"),
+                                                          subtitle:
+                                                          gender!.isEmpty? Text("") :Text(gender!),
+                                                        ),
+                                                        ListTile(
+                                                          leading:
+                                                          Icon(Icons.height),
+                                                          title: Text("height"),
+                                                          subtitle:
+                                                          height!.toString().isEmpty? Text("") :Text(height.toString()!),
+                                                        ),
+                                                        ListTile(
+                                                          leading:
+                                                          Icon(Icons.height),
+                                                          title: Text("weight"),
+                                                          subtitle:
+                                                          weight!.toString().isEmpty? Text("") :Text(weight.toString()!),
+                                                        ),
+                                                        ListTile(
+                                                          leading:
+                                                          Icon(Icons.bloodtype),
+                                                          title: Text("BloodType"),
+                                                          subtitle:
+                                                          bloodType!.isEmpty? Text("") :Text(bloodType!),
                                                         ),
                                                       ],
                                                     ),
@@ -297,7 +360,19 @@ class ProfilePage extends StatelessWidget {
            
            ),
            user.displayName != null?
-           Center(child: GoogleSignOut,): Center(child:SignOut)
+           Column(
+               children: [
+                 Center(child:UpdateData),
+                 const SizedBox(height: 25,),
+
+                 Center(child:SignOut),
+               ]) : Column(
+             children: [
+               Center(child:UpdateData),
+               const SizedBox(height: 25,),
+               Center(child:SignOut),
+             ],
+           )
           ],
         ),
       ),
