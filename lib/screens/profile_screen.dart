@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-
+import 'package:firebase/screens/PatientDetails.dart';
 import '../services/auth.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -47,7 +47,12 @@ class ProfilePage extends StatelessWidget {
       ),
     );
 
-
+  final GotoUpdate = ()=>
+  {
+      TextButton(child: Text("go to update")  , onPressed: () =>               Navigator.of
+      (context).push(MaterialPageRoute(builder: (context) => EditProfileScreen()
+)))
+  };
 
      final GoogleSignOut = Material(
       elevation: 5.0,

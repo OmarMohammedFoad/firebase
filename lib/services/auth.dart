@@ -227,7 +227,7 @@ e.message;    }
         
 
     // Future updateUserData(String? uid, String fullName, String mobileNumber,
-    //     String email, String age) async {
+    //      String age) async {
     //   collection
     //       .where(uid!, isEqualTo: FirebaseAuth.instance.currentUser?.uid)
     //       .limit(1)
@@ -238,10 +238,9 @@ e.message;    }
     //         'uid': uid,
     //         'fullName': fullName,
     //         'mobileNumber': mobileNumber,
-    //         'email': email,
     //         'age': age,
     //       });
     //     }
     //   }).catchError((error) {});
-    }
-  }
+    // }
+  }}
