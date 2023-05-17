@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../Login.dart';
-import '../Register.dart';
+import '../login_screen.dart';
+import '../registration_screen.dart';
 
 class Handler extends StatefulWidget {
   @override
@@ -26,7 +26,7 @@ class _Handler extends State<Handler> {
       return Login(toggleView : toggleView);
     }else
     {
-      return Register(toggleView : toggleView);
+      return RegistrationScreen(toggleView : toggleView);
     }
   }
 }

@@ -83,7 +83,12 @@ class AuthService {
       String fullName,
       String mobileNumber,
       String email,
-      String age,
+      //String age,
+      Timestamp timestamp,
+      String weight,
+      String height,
+      String bloodGroup,
+      String gender,
       String assignedTo,
       String imgurl,
       bool isAssigned) async {
@@ -94,18 +99,16 @@ class AuthService {
           email: _login.email.toString(),
           password: _login.password.toString());
 
-      /*final User? userr = _auth.currentUser;
-      final _uid = userr?.uid;*/
-      /*user?.updatePhotoURL(imageUrl);
-      user?.reload();*/
-
-      //Add user details
-      //addUserDetails(fullName, mobileNumber, email, age);
       updateUserData(
           fullName,
           mobileNumber,
           email,
-          age,
+          //age,
+          timestamp,
+          weight,
+          height,
+          bloodGroup,
+          gender,
           'Patient',
           assignedTo,
           false,
@@ -212,9 +215,8 @@ class AuthService {
   }
 
   Future updateUserData(String fullName, String mobileNumber, String email,
-      String age, String role, String selectedDoctor, bool isAssigned,
+      Timestamp timestamp, String weight, String height, String bloodGroup, String gender, String role, String selectedDoctor, bool isAssigned,
       String imgurl) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
     UserModel userModel = UserModel();
     userModel.email = email;
@@ -222,7 +224,12 @@ class AuthService {
     userModel.role = role;
     userModel.name = fullName;
     userModel.number = mobileNumber;
-    userModel.age = age;
+    //userModel.age = age;
+    userModel.timestamp = timestamp;
+    userModel.weight = weight;
+    userModel.height = height;
+    userModel.bloodGroup = bloodGroup;
+    userModel.gender = gender;
     userModel.isAssigned = false;
     userModel.imgurl = imgurl;
     userModel.assignedTo = selectedDoctor;

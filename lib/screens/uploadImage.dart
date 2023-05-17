@@ -31,7 +31,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   loadModel() async {
     var result = await Tflite.loadModel(
       labels: "assets/my_labels.txt",
-      model: "assets/converted_model_eff_91.tflite",
+      model: "assets/converted_model_eff_kfold_CM.tflite",
     );
 
     print('Results after loading the model: $result');
@@ -55,7 +55,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   Future imageClassification(File image) async {
     final List? recognitions = await Tflite.runModelOnImage(
       path: image.path,
-      numResults: 4,
+      numResults: 2,
       threshold: 0.05,
       imageMean: 127.5,
       imageStd: 127.5,
@@ -65,8 +65,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       print('results are $_result');
       _name = _result[0]['label'];
       _confidence = _result != null
-          ? //(_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
-      ("${(_result[0]["confidence"] * 100.0).toStringAsFixed(2)}%")
+          ? "${(_result[0]["confidence"] * 100.0).toStringAsFixed(2)}%"
           : "";
       isClassified = true;
       print('Diagnosis $_name and confidence $_confidence');
