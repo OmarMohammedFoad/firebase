@@ -77,8 +77,7 @@ class _onBoadringState extends State<onBoadring> {
                   
                   if(flag ==true )
                   {
-                    Navigator.pushAndRemoveUntil(
-                        context, MaterialPageRoute(builder: (context) => Login()), (route) => false);
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
                   }
                   else {
                      boardController.nextPage(
