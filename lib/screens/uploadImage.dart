@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
+import 'dart:convert';
 
 import 'historyScreen.dart';
 
@@ -20,6 +22,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   File? pickedImage;
   bool isImageLoaded = false;
   bool isClassified = false;
+  String?body = "";
+
 
   late List _result;
   String _name = "";
@@ -30,8 +34,8 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
 
   loadModel() async {
     var result = await Tflite.loadModel(
-      labels: "assets/my_labels.txt",
-      model: "assets/converted_model_eff_kfold_CM.tflite",
+      labels: "assets/labels.txt",
+      model: "assets/model.tflite",
     );
 
     print('Results after loading the model: $result');
@@ -55,7 +59,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   Future imageClassification(File image) async {
     final List? recognitions = await Tflite.runModelOnImage(
       path: image.path,
-      numResults: 2,
+      numResults: 4,
       threshold: 0.05,
       imageMean: 127.5,
       imageStd: 127.5,
@@ -65,7 +69,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
       print('results are $_result');
       _name = _result[0]['label'];
       _confidence = _result != null
-          ? "${(_result[0]["confidence"] * 100.0).toStringAsFixed(2)}%"
+          ? (_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
           : "";
       isClassified = true;
       print('Diagnosis $_name and confidence $_confidence');
@@ -83,15 +87,15 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             ),
             isImageLoaded
                 ? Center(
-                    child: Container(
-                      height: 350,
-                      width: 350,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: FileImage(File(pickedImage!.path)),
-                              fit: BoxFit.contain)),
-                    ),
-                  )
+              child: Container(
+                height: 350,
+                width: 350,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: FileImage(File(pickedImage!.path)),
+                        fit: BoxFit.contain)),
+              ),
+            )
                 : Container(width: 300, height: 300, color: Colors.grey[300]!),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -212,9 +216,9 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
             ),
             isClassified
                 ? Text(
-                    'Diagnosis: $_name \nConfidence: $_confidence',
-                    style: const TextStyle(color: Colors.green, fontSize: 20),
-                  )
+              'Diagnosis: $body',
+              style: const TextStyle(color: Colors.green, fontSize: 20),
+            )
                 : Container()
           ],
         ),
@@ -222,13 +226,42 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     );
   }
 
+  Future  uploadImage (pickedImage) async
+  {
+    if(pickedImage == null) return "";
+
+    String base64 =  base64Encode(pickedImage!.readAsBytesSync());
+    String imagename = pickedImage!.path.split("/").last;
+    String data = base64;
+    Map<String, String> requestHeaders ={'Content-type': 'application/json',
+      'Accept': 'application/json',};
+    var  response = await http.put(Uri.parse("http://10.0.2.2:5000/api"),body: data,headers:requestHeaders );
+
+    print(response.body);
+    setState(() {
+      isClassified = true;
+      body = response.body;
+    });
+  }
+
+
+
+
+
+
+
+
+
+
+
+
   getImage(ImageSource source) async {
     var tempStore = await ImagePicker().pickImage(source: source);
     setState(() {
       pickedImage = File(tempStore!.path);
       isImageLoaded = true;
     });
-    imageClassification(pickedImage!);
+    uploadImage(pickedImage);
     if (tempStore == null) retrieveLostData();
   }
 
