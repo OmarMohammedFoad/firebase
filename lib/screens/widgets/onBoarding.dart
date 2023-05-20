@@ -1,3 +1,4 @@
+import 'package:firebase/screens/authenticate/handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -13,7 +14,7 @@ class BoardModel {
 }
 
 class onBoadring extends StatefulWidget {
-  
+
 
   @override
   State<onBoadring> createState() => _onBoadringState();
@@ -30,6 +31,14 @@ class _onBoadringState extends State<onBoadring> {
     BoardModel(image: "assets/images/7900653.jpg",body: "",title:""),
 
   ];
+  bool showSignin = true;
+
+
+  // void toggleView(){
+  //   setState(() {
+  //     showSignin = !showSignin;
+  //   });
+  // }
   Widget build(BuildContext context) {
     return Scaffold
     ( 
@@ -77,8 +86,11 @@ class _onBoadringState extends State<onBoadring> {
                   
                   if(flag ==true )
                   {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
-                  }
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => Handler()),
+                          (Route<dynamic> route) => false,
+                    );                  }
                   else {
                      boardController.nextPage(
                   duration:const Duration(

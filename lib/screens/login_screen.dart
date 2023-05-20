@@ -161,7 +161,8 @@ class _Login extends State<Login> {
                   });
             }
             if (result != null) {
-              Navigator.pushNamed(context, 'home_screen');
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/home_screen', (Route<dynamic> route) => false);
             }
           }
         },

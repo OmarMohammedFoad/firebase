@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tflite/tflite.dart';
+// import 'package:tflite/tflite.dart';
 import 'dart:convert';
 
 import 'historyScreen.dart';
@@ -32,20 +32,20 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   CollectionReference? imgRef;
   firebase_storage.Reference? ref;
 
-  loadModel() async {
-    var result = await Tflite.loadModel(
-      labels: "assets/labels.txt",
-      model: "assets/model.tflite",
-    );
-
-    print('Results after loading the model: $result');
-  }
+  // loadModel() async {
+  //   var result = await Tflite.loadModel(
+  //     labels: "assets/labels.txt",
+  //     model: "assets/model.tflite",
+  //   );
+  //
+  //   print('Results after loading the model: $result');
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadModel();
+    // loadModel();
     imgRef = FirebaseFirestore.instance.collection('temp');
   }
 
@@ -53,28 +53,28 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    Tflite.close();
+    // Tflite.close();
   }
 
-  Future imageClassification(File image) async {
-    final List? recognitions = await Tflite.runModelOnImage(
-      path: image.path,
-      numResults: 4,
-      threshold: 0.05,
-      imageMean: 127.5,
-      imageStd: 127.5,
-    );
-    setState(() {
-      _result = recognitions!;
-      print('results are $_result');
-      _name = _result[0]['label'];
-      _confidence = _result != null
-          ? (_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
-          : "";
-      isClassified = true;
-      print('Diagnosis $_name and confidence $_confidence');
-    });
-  }
+  // Future imageClassification(File image) async {
+  //   // final List? recognitions = await Tflite.runModelOnImage(
+  //   //   path: image.path,
+  //   //   numResults: 4,
+  //   //   threshold: 0.05,
+  //   //   imageMean: 127.5,
+  //   //   imageStd: 127.5,
+  //   // );
+  //   setState(() {
+  //     _result = recognitions!;
+  //     print('results are $_result');
+  //     _name = _result[0]['label'];
+  //     _confidence = _result != null
+  //         ? (_result[0]['confidence'] * 100.0).toString().substring(0, 3) + '%'
+  //         : "";
+  //     isClassified = true;
+  //     print('Diagnosis $_name and confidence $_confidence');
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -235,7 +235,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     String data = base64;
     Map<String, String> requestHeaders ={'Content-type': 'application/json',
       'Accept': 'application/json',};
-    var  response = await http.put(Uri.parse("http://10.0.2.2:5000/api"),body: data,headers:requestHeaders );
+    var  response = await http.put(Uri.parse("http://192.168.1.112:8000/api"),body: data,headers:requestHeaders );
 
     print(response.body);
     setState(() {

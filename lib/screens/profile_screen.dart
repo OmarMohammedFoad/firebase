@@ -315,10 +315,10 @@ class ProfilePage extends StatelessWidget {
                                         child: SizedBox(
                                           width: 190.0,
                                           height: 190.0,
-                                          child: Image.network(
-                                            user.photoURL!,
-                                            fit: BoxFit.fill,
-                                          ),
+                                          // child: Image.network(
+                                          //   user.photoURL!,
+                                          //   fit: BoxFit.fill,
+                                          // ),
                                         ),
                                       ),
                                     ),
