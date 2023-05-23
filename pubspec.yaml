@@ -53,13 +53,16 @@ dependencies:
   pytorch_mobile: ^0.2.2
   camera:
   path_provider: ^2.0.11
-#  tflite: ^1.1.2
-  carousel_slider: ^4.2.1
   transparent_image: ^2.0.1
+  flutter_launcher_icons: ^0.11.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/img_492950.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
