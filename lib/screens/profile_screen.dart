@@ -349,8 +349,14 @@ class ProfilePage extends StatelessWidget {
                   : const Text(""),
             ),
             user.displayName != null
-                ? Center(child: SignOut)
-                : Center(child: SignOut)
+                ? Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Center(child: SignOut),
+                )
+                : Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Center(child: SignOut),
+                )
           ],
         ),
       ),

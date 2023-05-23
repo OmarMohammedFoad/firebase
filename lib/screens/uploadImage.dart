@@ -215,10 +215,13 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
               ],
             ),
             isClassified
-                ? Text(
+                ? Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: Text(
               'Diagnosis: $body',
-              style: const TextStyle(color: Colors.green, fontSize: 20),
-            )
+              style: const TextStyle(color:Colors.green, fontSize: 20),
+            ),
+                )
                 : Container()
           ],
         ),
@@ -235,7 +238,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
     String data = base64;
     Map<String, String> requestHeaders ={'Content-type': 'application/json',
       'Accept': 'application/json',};
-    var  response = await http.put(Uri.parse("http://192.168.1.112:8000/api"),body: data,headers:requestHeaders );
+    var  response = await http.put(Uri.parse("https://83d5-197-162-180-97.ngrok-free.app/api"),body: data,headers:requestHeaders );
 
     print(response.body);
     setState(() {
@@ -306,7 +309,7 @@ class _UploadImageScreenState extends State<UploadImageScreen> {
           'url': value,
           'id': FirebaseAuth.instance.currentUser!.uid,
           'email': FirebaseAuth.instance.currentUser!.email,
-          'diagnosis': _name,
+          'diagnosis': body!.substring(0,7),
           'time': DateTime.now(),
           'assignedTo': assignedTo,
         });

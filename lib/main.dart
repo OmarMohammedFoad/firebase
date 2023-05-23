@@ -20,9 +20,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StreamProvider<FirebaseUser?>.value(
+
       value: AuthService().user,
       initialData: null,
+
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           brightness: Brightness.light,
           primaryColor: Colors.black,
